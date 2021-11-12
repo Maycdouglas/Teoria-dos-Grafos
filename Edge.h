@@ -9,14 +9,13 @@ class Edge{
 private:
     int target_id;
     int origin_id;
-    int id;
-    Edge* next_edge;
+    Edge* next_edge; // lista de arestas do nó origin_id
     float weight;
 
 
 public:
     // Constructor
-    Edge(int target_id, int origin_id, int id);
+    Edge(int target_id, int origin_id);
     // Destructor
     ~Edge();
     // Getters
@@ -24,7 +23,6 @@ public:
     Edge* getNextEdge();
     float getWeight();
     int getOriginId();
-    int getId();
     // Setters
     void setNextEdge(Edge* edge);
     void setWeight(float weight);

@@ -18,7 +18,7 @@ private:
     bool directed;
     bool weighted_edge;
     bool weighted_node;
-    Node* first_node;
+    Node* first_node; //lista de nós do grafo
     Node* last_node;
 
 public:
@@ -36,11 +36,11 @@ public:
     Node* getLastNode();
     //Other methods
     void insertNode(int id, float peso);
-    void insertEdge(int id, int target_id, float weight, int aresta_id);
+    void insertEdge(int id, int target_id, float weight);
     void removeNode(int id);
     bool searchNode(int id);
     Node* getNode(int id);
-    Edge* getEdgeById(int id);
+    Node* getNodeByRotulo(int id);
 
 
 private:

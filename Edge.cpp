@@ -8,11 +8,10 @@ using namespace std;
 **************************************************************************************************/
 
 // Constructor
-Edge::Edge(int target_id, int origin_id, int id){
+Edge::Edge(int target_id, int origin_id){
 
     this->target_id = target_id;
     this->origin_id = origin_id;
-    this->id = id;
     this->next_edge = nullptr;
     this->weight = 0;
 
@@ -25,6 +24,7 @@ Edge::~Edge(){
 //        delete this->next_edge;
 //        this->next_edge = nullptr;
 //    }
+    this->next_edge = nullptr;
     cout << "destruiu" << endl;
 }
 
@@ -49,11 +49,6 @@ float Edge::getWeight(){
 
 int Edge::getOriginId() {
     return this->origin_id;
-}
-
-int Edge::getId()
-{
-    return this->id;
 }
 
 // Setters

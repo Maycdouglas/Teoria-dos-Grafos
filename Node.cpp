@@ -9,16 +9,16 @@ using namespace std;
 **************************************************************************************************/
 
 // Constructor
-Node::Node(int id){
+Node::Node(int id, int idRotulo){
 
     this->id = id;
+    this->idRotulo = idRotulo;
     this->in_degree = 0;
     this->out_degree = 0;
     this->weight = 0;
     this->first_edge = nullptr;
     this->last_edge = nullptr;
     this->next_node = nullptr;
-    this->noPai = nullptr;
 
 };
 
@@ -55,6 +55,10 @@ int Node::getId(){
 
 }
 
+int Node::getIdRotulo(){
+    return this->idRotulo;
+}
+
 int Node::getInDegree(){
 
     return this->in_degree;
@@ -79,10 +83,6 @@ Node* Node::getNextNode(){
 
 }
 
-Node* Node::getNoPai() {
-    return this->noPai;
-}
-
 // Setters
 
 void Node::setNextNode(Node* next_node){
@@ -97,18 +97,12 @@ void Node::setWeight(float weight){
 
 }
 
-void Node::setNoPai(Node* no){
-
-    this->noPai = no;
-
-}
-
 // Other methods
-void Node::insertEdge(int target_id, float weight, int origin_id, int id){
+void Node::insertEdge(int target_id, float weight, int origin_id){
     // Verifies whether there are at least one edge in the node
     if(this->first_edge != nullptr){
         // Allocating the new edge and keeping the integrity of the edge list
-        Edge* edge = new Edge(target_id, origin_id, id);
+        Edge* edge = new Edge(target_id, origin_id);
         edge->setWeight(weight);
         this->last_edge->setNextEdge(edge);
         this->last_edge = edge;
@@ -116,7 +110,7 @@ void Node::insertEdge(int target_id, float weight, int origin_id, int id){
     }
     else{
         // Allocating the new edge and keeping the integrity of the edge list
-        this->first_edge = new Edge(target_id, origin_id, id);
+        this->first_edge = new Edge(target_id, origin_id);
         this->first_edge->setWeight(weight);
         this->last_edge = this->first_edge;
 

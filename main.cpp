@@ -15,15 +15,15 @@ using namespace std;
 void exportarGrafo(Graph* graph, ofstream& output_file) {
     output_file << "strict graph G {\n";
 
-    for(int m = 0; m < graph->getOrder(); m++)
-    {
-        if(graph->getNode(m + 1)->getNoPai() != nullptr)
-        {
-            output_file << graph->getNode(m + 1)->getNoPai()->getId() << " -- "  << graph->getNode(m + 1)->getId();
-            output_file << " [weight = " << graph->getNode(m + 1)->hasEdgeBetween(graph->getNode(m + 1)->getNoPai()->getId())->getWeight();
-            output_file << ", label = " << graph->getNode(m + 1)->hasEdgeBetween(graph->getNode(m + 1)->getNoPai()->getId())->getWeight() << "]\n";
-        }
-    }
+//    for(int m = 0; m < graph->getOrder(); m++)
+//    {
+//        if(graph->getNode(m + 1)->getNoPai() != nullptr)
+//        {
+//            output_file << graph->getNode(m + 1)->getNoPai()->getId() << " -- "  << graph->getNode(m + 1)->getId();
+//            output_file << " [weight = " << graph->getNode(m + 1)->hasEdgeBetween(graph->getNode(m + 1)->getNoPai()->getId())->getWeight();
+//            output_file << ", label = " << graph->getNode(m + 1)->hasEdgeBetween(graph->getNode(m + 1)->getNoPai()->getId())->getWeight() << "]\n";
+//        }
+//    }
     output_file << "}";
 }
 
@@ -40,29 +40,12 @@ Graph* leituraInstancia(ifstream& input_file, int directed, int weightedEdge, in
     input_file >> order;
 
     //Criando o grafo
-    Graph* graph = new Graph(order, directed, weightedEdge, weightedNode);
-    int i = 1;
+    Graph* graph = new Graph(0, directed, weightedEdge, weightedNode);
 
-    //Criando os nos
-    while( i <= order)
-    {
-        graph->insertNode(i,0);
-        i++;
-    }
 
     //Leitura de arquivo
-    int contadorArestas = 1;
     while(input_file >> idNodeSource >> idNodeTarget >> pesoAresta) {
-
-        graph->insertEdge(idNodeSource, idNodeTarget, pesoAresta, contadorArestas);
-
-        if(directed){
-            contadorArestas = contadorArestas + 1;
-        }
-        else {
-
-        }
-        contadorArestas = contadorArestas + 2;
+        graph->insertEdge(idNodeSource, idNodeTarget, pesoAresta);
     }
 
     return graph;
@@ -92,6 +75,23 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
         //Gera o grafo enviado
         case 1:{
             exportarGrafo(graph,output_file);
+            Node *no = graph->getFirstNode();
+            while(no != nullptr)
+            {
+                cout << "No do grafo: " << no->getId() << endl;
+                cout << "No Rotulo do grafo: " << no->getIdRotulo() << endl;
+                cout << "Arestas: " << endl;
+                Edge *aresta = no->getFirstEdge();
+                while(aresta != nullptr)
+                {
+                    cout << "No origem: " << aresta->getOriginId() << " No alvo: " << aresta->getTargetId() << " Peso da Aresta: "<< aresta->getWeight() << endl;
+                    aresta = aresta->getNextEdge();
+                }
+                cout << "==============" << endl;
+
+                no = no->getNextNode();
+            }
+            cout << "Ordem do grafo eeh: " << graph->getOrder() << endl;
             break;
         }
             //Algoritmo Guloso Randomizado

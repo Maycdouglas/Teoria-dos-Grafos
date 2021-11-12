@@ -83,16 +83,14 @@ Node *Graph::getLastNode()
     return this->last_node;
 }
 
-
-
-void Graph::insertNode(int id, float peso)
+void Graph::insertNode(int id_rotulo, float peso)
 {
-    Node *no = new Node(id); //cria um novo nó
+    Node *no = new Node(this->order + 1, id_rotulo); //cria um novo nó
 
     //verifica se o grafo tem peso nos nós
     if(this->getWeightedNode())
     {
-        no->setWeight(peso); //insere o peso no  novo nó
+        no->setWeight(peso); //insere o peso no novo nó
     }
 
     if(this->first_node == nullptr)  //verifica se existe nó no grafo, caso não exista, altera o primeiro e ultimo nó
@@ -106,23 +104,43 @@ void Graph::insertNode(int id, float peso)
         this->last_node = no;
     }
 
+    order++;
+
 }
 
-void Graph::insertEdge(int id, int target_id, float weight, int aresta_id)
+void Graph::insertEdge(int id_rotulo, int target_id_rotulo, float weight)
 {
-    Node *noInicial = getNode(id);   ///recebe o nó inicial a partir do ID recebido
-    noInicial->insertEdge(target_id, weight, id, aresta_id); ///insire a aresta a partir do nó inicial
 
-    if(directed) ///verifica se é um digrafo
+    //Verifica se o nó Inicial existe
+    if(!searchNode(id_rotulo))
+    {
+        insertNode(id_rotulo,0);
+    }
+
+    //Verifica se o nó Final existe
+    if(!searchNode(target_id_rotulo))
+    {
+        insertNode(target_id_rotulo,0);
+    }
+
+    Node *noInicial = getNodeByRotulo(id_rotulo);   //recebe o nó inicial a partir do ID recebido
+    Node *noFinal = getNodeByRotulo(target_id_rotulo);   //recebe o nó final a partir do ID recebido
+
+    int id = noInicial->getId(); //recebe o id do nó inicial
+    int target_id = noFinal->getId(); //recebe o id do nó final
+
+    noInicial->insertEdge(target_id, weight,id); //insire a aresta a partir do nó inicial
+
+    if(directed) //verifica se é um digrafo
     {
         getNode(id)->incrementOutDegree();
         getNode(target_id)->incrementInDegree();
     }
     else
     {
-        /// uma aresta auxiliar é adicionada entre os dois nós para o percurso inverso ser possível
+        // uma aresta auxiliar é adicionada entre os dois nós para o percurso inverso ser possível
         Node *noAux = getNode(target_id);
-        noAux->insertEdge(id, weight, target_id, aresta_id + 1);
+        noAux->insertEdge(id, weight, target_id);
 
         getNode(id)->incrementOutDegree();
         getNode(id)->incrementInDegree();
@@ -174,7 +192,7 @@ bool Graph::searchNode(int id)
 
     while (no != nullptr) ///loop responsavel por encontrar o nó no grafo
     {
-        if (no->getId() == id) ///condicional que verifica se o ID do nó foi encontrado
+        if (no->getIdRotulo() == id) ///condicional que verifica se o ID Rotulo do nó foi encontrado
         {
             return true;
         }
@@ -200,23 +218,16 @@ Node *Graph::getNode(int id)
     return nullptr;
 }
 
-Edge* Graph::getEdgeById(int id)
+Node *Graph::getNodeByRotulo(int id)
 {
     Node *no = this->first_node;
-    Edge *aresta;
 
     while (no != nullptr) ///loop responsavel por encontrar o nó no grafo
     {
-        aresta = no->getFirstEdge();
-        while(aresta != nullptr)
+        if (no->getIdRotulo() == id) ///condicional que verifica se o ID do nó foi encontrado
         {
-            if(aresta->getId() == id)
-            {
-                return aresta;
-            }
-            aresta = aresta->getNextEdge();
+            return no;
         }
-
         no = no->getNextNode();
     }
 

@@ -9,36 +9,35 @@ class Node{
 
     // Attributes
 private:
-    Edge* first_edge;
+    Edge* first_edge; //lista de arestas do nó
     Edge* last_edge;
     int id;
+    int idRotulo;
     unsigned int in_degree;
     unsigned int out_degree;
     float weight;
-    Node* next_node;
-    Node* noPai;
+    Node* next_node; //lista de nós do grafo
 
 public:
     // Constructor
-    Node(int id);
+    Node(int id, int idRotulo);
     // Destructor
     ~Node();
     // Getters
     Edge* getFirstEdge();
     Edge* getLastEdge();
     int getId();
+    int getIdRotulo();
     int getInDegree();
     int getOutDegree();
     float getWeight();
     Node* getNextNode();
-    Node* getNoPai();
     // Setters
     void setNextNode(Node* node);
     void setWeight(float weight);
-    void setNoPai(Node* no);
     // Other methods
     bool searchEdge(int target_id);
-    void insertEdge(int target_id, float weight, int origin_id, int id);
+    void insertEdge(int target_id, float weight, int origin_id);
     void removeAllEdges();
     int removeEdge(int id, bool directed, Node* target_node);
     void incrementOutDegree();
