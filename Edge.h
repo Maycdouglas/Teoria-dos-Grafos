@@ -11,6 +11,7 @@ private:
     int origin_id;
     Edge* next_edge; // lista de arestas do nó origin_id
     float weight;
+    bool retorno;
 
 
 public:
@@ -23,9 +24,11 @@ public:
     Edge* getNextEdge();
     float getWeight();
     int getOriginId();
+    bool getRetorno();
     // Setters
     void setNextEdge(Edge* edge);
     void setWeight(float weight);
+    void setRetorno(bool retorno);
 
 
 };
