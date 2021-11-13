@@ -129,7 +129,7 @@ void Graph::insertEdge(int id_rotulo, int target_id_rotulo, float weight)
     int id = noInicial->getId(); //recebe o id do nó inicial
     int target_id = noFinal->getId(); //recebe o id do nó final
 
-    noInicial->insertEdge(target_id, weight,id, false); //insere a aresta a partir do nó inicial
+    noInicial->insertEdge(target_id, weight, id, false); //insere a aresta a partir do nó inicial
 
     if(directed) //verifica se é um digrafo
     {
@@ -139,8 +139,8 @@ void Graph::insertEdge(int id_rotulo, int target_id_rotulo, float weight)
     else
     {
         // uma aresta auxiliar é adicionada entre os dois nós para o percurso inverso ser possível
-        Node *noAux = getNode(target_id);
-        noAux->insertEdge(id, weight, target_id, true);
+//        Node *noAux = getNode(target_id);
+        noFinal->insertEdge(id, weight, target_id, true);
 
         getNode(id)->incrementOutDegree();
         getNode(id)->incrementInDegree();

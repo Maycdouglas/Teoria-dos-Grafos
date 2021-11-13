@@ -1,3 +1,13 @@
 strict graph G {
+10 -- 20 [weight = 1, label = 1]
+10 -- 30 [weight = 7, label = 7]
+10 -- 40 [weight = 10, label = 10]
+10 -- 50 [weight = 8, label = 8]
+20 -- 30 [weight = 3, label = 3]
+20 -- 40 [weight = 4, label = 4]
+20 -- 50 [weight = 2, label = 2]
+30 -- 40 [weight = 5, label = 5]
+30 -- 50 [weight = 5, label = 5]
+40 -- 50 [weight = 7, label = 7]
 }
 

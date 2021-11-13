@@ -14,16 +14,26 @@ using namespace std;
 
 void exportarGrafo(Graph* graph, ofstream& output_file) {
     output_file << "strict graph G {\n";
+    Node *noInicial = nullptr;
+    Node *noFinal = nullptr;
 
-//    for(int m = 0; m < graph->getOrder(); m++)
-//    {
-//        if(graph->getNode(m + 1)->getNoPai() != nullptr)
-//        {
-//            output_file << graph->getNode(m + 1)->getNoPai()->getId() << " -- "  << graph->getNode(m + 1)->getId();
-//            output_file << " [weight = " << graph->getNode(m + 1)->hasEdgeBetween(graph->getNode(m + 1)->getNoPai()->getId())->getWeight();
-//            output_file << ", label = " << graph->getNode(m + 1)->hasEdgeBetween(graph->getNode(m + 1)->getNoPai()->getId())->getWeight() << "]\n";
-//        }
-//    }
+    for(int m = 0; m < graph->getOrder(); m++)
+    {
+        Edge *aresta = graph->getNode(m + 1)->getFirstEdge();
+        while(aresta != nullptr)
+        {
+            if(!aresta->getRetorno())
+            {
+                noInicial = graph->getNode(aresta->getOriginId());
+                noFinal = graph->getNode(aresta->getTargetId());
+
+                output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
+                output_file << " [weight = " << aresta->getWeight();
+                output_file << ", label = " << aresta->getWeight() << "]\n";
+            }
+            aresta = aresta->getNextEdge();
+        }
+    }
     output_file << "}";
 }
 

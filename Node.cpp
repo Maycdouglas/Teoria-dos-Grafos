@@ -113,6 +113,7 @@ void Node::insertEdge(int target_id, float weight, int origin_id, bool retorno){
         // Allocating the new edge and keeping the integrity of the edge list
         this->first_edge = new Edge(target_id, origin_id);
         this->first_edge->setWeight(weight);
+        this->first_edge->setRetorno(retorno);
         this->last_edge = this->first_edge;
 
     }
