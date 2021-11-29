@@ -234,5 +234,26 @@ Node *Graph::getNodeByRotulo(int id)
     return nullptr;
 }
 
+//NOSSOS METODOS
+
+void Graph::buscaEmLargura(int id) {
+
+    Node *no = first_node;
+    Node *noAux = nullptr;
+    Edge *aresta = nullptr;
+    while(no != nullptr){
+        aresta = no->getFirstEdge();
+        cout << "Lista de adjacencia do vertice " << no->getIdRotulo() << " :" << endl;
+
+        while(aresta != nullptr) {
+            noAux = getNode(aresta->getTargetId());
+            cout << noAux->getIdRotulo() << endl;
+            aresta = aresta->getNextEdge();
+        }
+
+        no = no->getNextNode();
+    }
+}
+
 
 

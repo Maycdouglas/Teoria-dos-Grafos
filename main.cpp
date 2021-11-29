@@ -68,7 +68,7 @@ int menu(){
     cout << "MENU" << endl;
     cout << "----" << endl;
     cout << "[1] Gerar grafo" << endl;
-    cout << "[2] Algoritmo Guloso Randomizado" << endl;
+    cout << "[2] Busca em Largura" << endl;
     cout << "[3] Algoritmo Guloso Randomizado Reativo" << endl;
     cout << "[0] Sair" << endl;
 
@@ -106,7 +106,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
         }
             //Algoritmo Guloso Randomizado
         case 2:{
-
+            graph->buscaEmLargura(10);
             break;
         }
 

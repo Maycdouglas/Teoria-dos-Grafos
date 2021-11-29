@@ -42,6 +42,9 @@ public:
     Node* getNode(int id);
     Node* getNodeByRotulo(int id);
 
+    //Nossos Metodos
+    void buscaEmLargura(int id);
+
 
 private:
     //Auxiliar methods
