@@ -106,7 +106,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
         }
             //Algoritmo Guloso Randomizado
         case 2:{
-            graph->buscaEmLargura(10);
+            exportarGrafo(graph->buscaEmLargura(40), output_file);
             break;
         }
 

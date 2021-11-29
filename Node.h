@@ -17,6 +17,7 @@ private:
     unsigned int out_degree;
     float weight;
     Node* next_node; //lista de nós do grafo
+    bool marcado;
 
 public:
     // Constructor
@@ -32,9 +33,11 @@ public:
     int getOutDegree();
     float getWeight();
     Node* getNextNode();
+    bool getMarcado();
     // Setters
     void setNextNode(Node* node);
     void setWeight(float weight);
+    void setMarcado(bool marcado);
     // Other methods
     bool searchEdge(int target_id);
     void insertEdge(int target_id, float weight, int origin_id, bool retorno);

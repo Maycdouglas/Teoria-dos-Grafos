@@ -19,6 +19,7 @@ Node::Node(int id, int idRotulo){
     this->first_edge = nullptr;
     this->last_edge = nullptr;
     this->next_node = nullptr;
+    this->marcado = false;
 
 };
 
@@ -83,6 +84,10 @@ Node* Node::getNextNode(){
 
 }
 
+bool Node::getMarcado(){
+    return this->marcado;
+}
+
 // Setters
 
 void Node::setNextNode(Node* next_node){
@@ -95,6 +100,10 @@ void Node::setWeight(float weight){
 
     this->weight = weight;
 
+}
+
+void Node::setMarcado(bool marcado) {
+    this->marcado = marcado;
 }
 
 // Other methods

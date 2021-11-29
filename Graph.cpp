@@ -236,23 +236,59 @@ Node *Graph::getNodeByRotulo(int id)
 
 //NOSSOS METODOS
 
-void Graph::buscaEmLargura(int id) {
+Graph *Graph::buscaEmLargura(int id) {
 
-    Node *no = first_node;
+    Node *no = getNodeByRotulo(id);
     Node *noAux = nullptr;
     Edge *aresta = nullptr;
-    while(no != nullptr){
+    Graph* arvore = new Graph(0, directed, weighted_edge, weighted_node);
+    int idNodeSource;
+    int idNodeTarget;
+    queue<int> filaVertices;
+    filaVertices.push(no->getId());
+
+    no->setMarcado(true);
+
+    while(filaVertices.size() != 0){
         aresta = no->getFirstEdge();
-        cout << "Lista de adjacencia do vertice " << no->getIdRotulo() << " :" << endl;
 
         while(aresta != nullptr) {
             noAux = getNode(aresta->getTargetId());
-            cout << noAux->getIdRotulo() << endl;
+            if(noAux->getMarcado() == false){
+                idNodeSource= no->getIdRotulo();
+                idNodeTarget= noAux->getIdRotulo();
+                arvore->insertEdge(idNodeSource, idNodeTarget, aresta->getWeight());
+                noAux->setMarcado(true);
+                filaVertices.push(noAux->getId());
+            }
             aresta = aresta->getNextEdge();
         }
 
-        no = no->getNextNode();
+        filaVertices.pop();
+
+        no = getNode(filaVertices.front());
     }
+
+    return arvore;
+
+
+
+
+//    while(no != nullptr){
+//        aresta = no->getFirstEdge();
+//        cout << "Lista de adjacencia do vertice " << no->getIdRotulo() << " :" << endl;
+//
+//        while(aresta != nullptr) {
+//            noAux = getNode(aresta->getTargetId());
+//            cout << noAux->getIdRotulo() << endl;
+//            aresta = aresta->getNextEdge();
+//        }
+//
+//        no = no->getNextNode();
+//    }
+
+
+
 }
 
 
