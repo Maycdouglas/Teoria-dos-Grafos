@@ -43,7 +43,7 @@ public:
     Node* getNodeByRotulo(int id);
 
     //Nossos Metodos
-    Graph* buscaEmLargura(int id);
+    string buscaEmLargura(int id);
 
 
 private:

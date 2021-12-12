@@ -15,6 +15,7 @@ Edge::Edge(int target_id, int origin_id){
     this->next_edge = nullptr;
     this->weight = 0;
     this->retorno = false;
+    this->vermelho = false;
 
 }
 
@@ -56,6 +57,14 @@ bool Edge::getRetorno() {
     return this->retorno;
 }
 
+bool Edge::getVermelho() {
+    return this->vermelho;
+}
+
+bool Edge::getMarcado() {
+    return this->marcado;
+}
+
 // Setters
 void Edge::setNextEdge(Edge* edge){
 
@@ -71,6 +80,14 @@ void Edge::setWeight(float weight){
 
 void Edge::setRetorno(bool retorno) {
     this->retorno = retorno;
+}
+
+void Edge::setVermelho(bool vermelho) {
+    this->vermelho = vermelho;
+}
+
+void Edge::setMarcado(bool marcado) {
+    this->marcado = marcado;
 }
 
 

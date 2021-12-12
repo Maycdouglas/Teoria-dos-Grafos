@@ -26,10 +26,17 @@ void exportarGrafo(Graph* graph, ofstream& output_file) {
             {
                 noInicial = graph->getNode(aresta->getOriginId());
                 noFinal = graph->getNode(aresta->getTargetId());
+                if(aresta->getVermelho() == false){
+                    output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
+                    output_file << " [weight = " << aresta->getWeight();
+                    output_file << ", label = " << aresta->getWeight() << "]\n";
+                } else {
+                    output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
+                    output_file << " [weight = " << aresta->getWeight();
+                    output_file << ", label = " << aresta->getWeight();
+                    output_file << ", color=red]\n";
+                }
 
-                output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
-                output_file << " [weight = " << aresta->getWeight();
-                output_file << ", label = " << aresta->getWeight() << "]\n";
             }
             aresta = aresta->getNextEdge();
         }
@@ -106,7 +113,8 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
         }
             //Algoritmo Guloso Randomizado
         case 2:{
-            exportarGrafo(graph->buscaEmLargura(40), output_file);
+//            exportarGrafo(graph->buscaEmLargura(40), output_file);
+                output_file << graph->buscaEmLargura(40);
             break;
         }
 

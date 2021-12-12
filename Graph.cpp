@@ -236,16 +236,28 @@ Node *Graph::getNodeByRotulo(int id)
 
 //NOSSOS METODOS
 
-Graph *Graph::buscaEmLargura(int id) {
+string Graph::buscaEmLargura(int id) {
 
+    string grafo, arestaDOT;
     Node *no = getNodeByRotulo(id);
     Node *noAux = nullptr;
     Edge *aresta = nullptr;
+    Edge *arestaAux = nullptr;
     Graph* arvore = new Graph(0, directed, weighted_edge, weighted_node);
     int idNodeSource;
     int idNodeTarget;
     queue<int> filaVertices;
     filaVertices.push(no->getId());
+
+    if(this->directed)
+    {
+        grafo = "strict digraph G {\n";
+        arestaDOT = " -> ";
+    }
+    else {
+        grafo = "strict graph G {\n";
+        arestaDOT = " -- ";
+    }
 
     no->setMarcado(true);
 
@@ -254,12 +266,30 @@ Graph *Graph::buscaEmLargura(int id) {
 
         while(aresta != nullptr) {
             noAux = getNode(aresta->getTargetId());
+            idNodeSource= no->getIdRotulo();
+            idNodeTarget= noAux->getIdRotulo();
             if(noAux->getMarcado() == false){
-                idNodeSource= no->getIdRotulo();
-                idNodeTarget= noAux->getIdRotulo();
+                grafo += "\t" + to_string(idNodeSource) + arestaDOT + to_string(idNodeTarget);
+                grafo += " [weight = " + to_string(aresta->getWeight());
+                grafo += ", label = " + to_string(aresta->getWeight()) + "]\n";
+
                 arvore->insertEdge(idNodeSource, idNodeTarget, aresta->getWeight());
                 noAux->setMarcado(true);
+                aresta->setMarcado(true);
+                arestaAux = noAux->hasEdgeBetween(no->getId());
+                arestaAux->setMarcado(true);
                 filaVertices.push(noAux->getId());
+            } else {
+                if(!(aresta->getMarcado()))
+                {
+                    grafo += "\t" + to_string(idNodeSource) + arestaDOT + to_string(idNodeTarget);
+                    grafo += " [weight = " + to_string(aresta->getWeight());
+                    grafo += ", label = " + to_string(aresta->getWeight());
+                    grafo += ", color = red]\n";
+                    aresta->setMarcado(true);
+                    arestaAux = noAux->hasEdgeBetween(no->getId());
+                    arestaAux->setMarcado(true);
+                }
             }
             aresta = aresta->getNextEdge();
         }
@@ -269,25 +299,11 @@ Graph *Graph::buscaEmLargura(int id) {
         no = getNode(filaVertices.front());
     }
 
-    return arvore;
+    grafo += "}";
 
+    cout << grafo << endl;
 
-
-
-//    while(no != nullptr){
-//        aresta = no->getFirstEdge();
-//        cout << "Lista de adjacencia do vertice " << no->getIdRotulo() << " :" << endl;
-//
-//        while(aresta != nullptr) {
-//            noAux = getNode(aresta->getTargetId());
-//            cout << noAux->getIdRotulo() << endl;
-//            aresta = aresta->getNextEdge();
-//        }
-//
-//        no = no->getNextNode();
-//    }
-
-
+    return grafo;
 
 }
 
