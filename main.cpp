@@ -13,35 +13,69 @@
 using namespace std;
 
 void exportarGrafo(Graph* graph, ofstream& output_file) {
-    output_file << "strict graph G {\n";
-    Node *noInicial = nullptr;
-    Node *noFinal = nullptr;
+    if(graph->getDirected() == false){
 
-    for(int m = 0; m < graph->getOrder(); m++)
-    {
-        Edge *aresta = graph->getNode(m + 1)->getFirstEdge();
-        while(aresta != nullptr)
+
+        output_file << "strict graph G {\n";
+        Node *noInicial = nullptr;
+        Node *noFinal = nullptr;
+
+        for(int m = 0; m < graph->getOrder(); m++)
         {
-            if(!aresta->getRetorno())
+            Edge *aresta = graph->getNode(m + 1)->getFirstEdge();
+            while(aresta != nullptr)
             {
-                noInicial = graph->getNode(aresta->getOriginId());
-                noFinal = graph->getNode(aresta->getTargetId());
-                if(aresta->getVermelho() == false){
-                    output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
-                    output_file << " [weight = " << aresta->getWeight();
-                    output_file << ", label = " << aresta->getWeight() << "]\n";
-                } else {
-                    output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
-                    output_file << " [weight = " << aresta->getWeight();
-                    output_file << ", label = " << aresta->getWeight();
-                    output_file << ", color=red]\n";
-                }
+                if(!aresta->getRetorno())
+                {
+                    noInicial = graph->getNode(aresta->getOriginId());
+                    noFinal = graph->getNode(aresta->getTargetId());
+                    if(aresta->getVermelho() == false){
+                        output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
+                        output_file << " [weight = " << aresta->getWeight();
+                        output_file << ", label = " << aresta->getWeight() << "]\n";
+                    } else {
+                        output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
+                        output_file << " [weight = " << aresta->getWeight();
+                        output_file << ", label = " << aresta->getWeight();
+                        output_file << ", color=red]\n";
+                    }
 
+                }
+                aresta = aresta->getNextEdge();
             }
-            aresta = aresta->getNextEdge();
         }
+        output_file << "}";
+    } else {
+        output_file << "strict digraph G {\n";
+        Node *noInicial = nullptr;
+        Node *noFinal = nullptr;
+
+        for(int m = 0; m < graph->getOrder(); m++)
+        {
+            Edge *aresta = graph->getNode(m + 1)->getFirstEdge();
+            while(aresta != nullptr)
+            {
+                if(!aresta->getRetorno())
+                {
+                    noInicial = graph->getNode(aresta->getOriginId());
+                    noFinal = graph->getNode(aresta->getTargetId());
+                    if(aresta->getVermelho() == false){
+                        output_file << noInicial->getIdRotulo() << " -> " << noFinal->getIdRotulo();
+                        output_file << " [weight = " << aresta->getWeight();
+                        output_file << ", label = " << aresta->getWeight() << "]\n";
+                    } else {
+                        output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
+                        output_file << " [weight = " << aresta->getWeight();
+                        output_file << ", label = " << aresta->getWeight();
+                        output_file << ", color=red]\n";
+                    }
+
+                }
+                aresta = aresta->getNextEdge();
+            }
+        }
+        output_file << "}";
     }
-    output_file << "}";
 }
 
 Graph* leituraInstancia(ifstream& input_file, int directed, int weightedEdge, int weightedNode){
@@ -76,7 +110,7 @@ int menu(){
     cout << "----" << endl;
     cout << "[1] Gerar grafo" << endl;
     cout << "[2] Busca em Largura" << endl;
-    cout << "[3] Algoritmo Guloso Randomizado Reativo" << endl;
+    cout << "[3] Fecho Transitivo Direto" << endl;
     cout << "[0] Sair" << endl;
 
     cin >> selecao;
@@ -120,7 +154,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
 
             //Algoritmo Guloso Randomizado Reativo
         case 3:{
-
+            string teste = graph->fechoTransitivoDireto(10);
             break;
         }
 

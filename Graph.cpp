@@ -307,5 +307,30 @@ string Graph::buscaEmLargura(int id) {
 
 }
 
+string Graph::fechoTransitivoDireto(int id) {
+
+    Node *no = getNodeByRotulo(id); //seleciona o noh de acordo com seu ID Rótulo
+    Node *noAlvo;
+    Edge *aresta = no->getFirstEdge();
+    list<int> listaVerticesAlcancados;
+    list<int>::iterator it;
+
+    while (aresta != nullptr)
+    {
+        noAlvo = getNode(aresta->getTargetId());
+
+        listaVerticesAlcancados.push_back(noAlvo->getIdRotulo());
+
+        aresta = aresta->getNextEdge();
+    }
+
+    for(it = listaVerticesAlcancados.begin(); it!=listaVerticesAlcancados.end();it++) {
+        cout << *it << endl;
+    }
+
+    return "maycon";
+
+}
+
 
 

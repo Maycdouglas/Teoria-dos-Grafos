@@ -44,6 +44,7 @@ public:
 
     //Nossos Metodos
     string buscaEmLargura(int id);
+    string fechoTransitivoDireto(int id);
 
 
 private:
