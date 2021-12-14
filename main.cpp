@@ -154,7 +154,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
 
             //Algoritmo Guloso Randomizado Reativo
         case 3:{
-            string teste = graph->fechoTransitivoDireto(10);
+            string teste = graph->fechoTransitivoDireto(70);
             break;
         }
 

@@ -338,6 +338,40 @@ string Graph::fechoTransitivoDireto(int idRotulo) {
         cout << visitados2[j] << endl;
     }
 
+    string grafo, arestaDOT;
+    grafo = "strict digraph G {\n";
+    arestaDOT = " -> ";
+
+    Node *no = getFirstNode();
+    Edge *aresta;
+    Node *noAux = nullptr;
+    int idNodeSource, idNodeTarget;
+
+    while (no != nullptr) {
+        aresta = no->getFirstEdge();
+        idNodeSource= no->getIdRotulo();
+        if((idNodeSource != idRotulo) && (visitou(idNodeSource,visitados2))){
+            while(aresta != nullptr) {
+                noAux = getNode(aresta->getTargetId());
+                idNodeTarget= noAux->getIdRotulo();
+
+                if(visitou(idNodeTarget, visitados2)) {
+                    grafo += "\t" + to_string(idNodeSource) + arestaDOT + to_string(idNodeTarget);
+                    grafo += " [weight = " + to_string(aresta->getWeight());
+                    grafo += ", label = " + to_string(aresta->getWeight()) + "]\n";
+                }
+
+                aresta = aresta->getNextEdge();
+            }
+        }
+        no = no->getNextNode();
+
+    }
+
+    grafo += "}";
+
+    cout << grafo << endl;
+
     return "maycon";
 
 }
@@ -360,9 +394,9 @@ void Graph::fechoTransitivoDiretoAux(int id, int *visitados) {
 
 }
 
-bool Graph::visitou(int id, int *visitados) {
+bool Graph::visitou(int id, int *visitados2) {
     for(int i = 0; i < this->order; i++){
-        if(visitados[i] == id){
+        if(visitados2[i] == id){
             return true;
         }
     }

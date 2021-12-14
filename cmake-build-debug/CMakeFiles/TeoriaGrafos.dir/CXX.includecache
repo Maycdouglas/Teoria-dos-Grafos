@@ -8,47 +8,43 @@
 
 C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Edge.h
 
-C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Graph.cpp
-Graph.h
 C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Graph.h
 Node.h
 C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Node.h
 Edge.h
 C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Edge.h
+fstream
+-
+stack
+-
+list
+-
+
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Node.h
+Edge.h
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Edge.h
+
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/main.cpp
 iostream
 -
 fstream
 -
-stack
--
-queue
--
-list
+string
 -
 cmath
 -
-cstdlib
+utility
 -
-ctime
--
-cfloat
+tuple
 -
 iomanip
 -
-
+cstdlib
+-
+chrono
+-
+Graph.h
 C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Graph.h
 Node.h
 C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Node.h
-Edge.h
-C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Edge.h
-fstream
--
-stack
--
-list
--
-
-C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Node.h
-Edge.h
-C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Edge.h
 
