@@ -45,6 +45,8 @@ public:
     //Nossos Metodos
     string buscaEmLargura(int id);
     string fechoTransitivoDireto(int id);
+    void fechoTransitivoDiretoAux(int id, int *visitados);
+    bool visitou(int id, int*visitados);
 
 
 private:

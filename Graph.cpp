@@ -307,29 +307,66 @@ string Graph::buscaEmLargura(int id) {
 
 }
 
-string Graph::fechoTransitivoDireto(int id) {
+string Graph::fechoTransitivoDireto(int idRotulo) {
 
-    Node *no = getNodeByRotulo(id); //seleciona o noh de acordo com seu ID Rótulo
-    Node *noAlvo;
-    Edge *aresta = no->getFirstEdge();
-    list<int> listaVerticesAlcancados;
-    list<int>::iterator it;
+    int id = getNodeByRotulo(idRotulo)->getId();
+    int visitados[this->order];
+    int visitados2[this->order];
 
-    while (aresta != nullptr)
-    {
-        noAlvo = getNode(aresta->getTargetId());
-
-        listaVerticesAlcancados.push_back(noAlvo->getIdRotulo());
-
-        aresta = aresta->getNextEdge();
+    for(int i = 0; i < this->order; i++){
+        visitados[i] = 0;
     }
 
-    for(it = listaVerticesAlcancados.begin(); it!=listaVerticesAlcancados.end();it++) {
-        cout << *it << endl;
+    for(int l = 0; l < this->order; l++){
+        visitados2[l] = -1;
+    }
+
+    fechoTransitivoDiretoAux(id, visitados);
+
+    int k, contador = 0;
+
+    for(int m = 0; m < this->order; m++){
+
+        if(visitados[m] == 1){
+            k = getNode(m+1)->getIdRotulo();
+            visitados2[contador] = k;
+            contador++;
+        }
+    }
+
+    for(int j = 0; j < this->order; j++){
+        cout << visitados2[j] << endl;
     }
 
     return "maycon";
 
+}
+
+void Graph::fechoTransitivoDiretoAux(int id, int *visitados) {
+
+    Node *no = getNode(id);
+    Edge *aresta= no->getFirstEdge();
+
+    visitados[id - 1] = 1;
+
+    while(aresta != nullptr) {
+
+        if( (visitados[aresta->getTargetId() - 1] == 0) ){
+            fechoTransitivoDiretoAux(aresta->getTargetId(), visitados);
+        }
+
+        aresta = aresta->getNextEdge();
+    }
+
+}
+
+bool Graph::visitou(int id, int *visitados) {
+    for(int i = 0; i < this->order; i++){
+        if(visitados[i] == id){
+            return true;
+        }
+    }
+    return false;
 }
 
 
