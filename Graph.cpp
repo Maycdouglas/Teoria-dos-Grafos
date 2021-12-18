@@ -403,5 +403,31 @@ bool Graph::visitou(int id, int *visitados2) {
     return false;
 }
 
+string Graph::fechoTransitivoIndireto(int idRotulo) {
+
+
+
+    return "maycon";
+
+}
+
+void Graph::fechoTransitivoIndiretoAux(int id, int *visitados) {
+
+    Node *no = getNode(id);
+    Edge *aresta= no->getFirstEdge();
+
+    visitados[id - 1] = 1;
+
+    while(aresta != nullptr) {
+
+        if( (visitados[aresta->getTargetId() - 1] == 0) ){
+            fechoTransitivoDiretoAux(aresta->getTargetId(), visitados);
+        }
+
+        aresta = aresta->getNextEdge();
+    }
+
+}
+
 
 
