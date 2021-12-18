@@ -434,6 +434,8 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
     float vetorPesos[this->order];
     int idInicial = getNodeByRotulo(idRotuloInicial)->getId();
     int idFinal = getNodeByRotulo(idRotuloFinal)->getId();
+    int verticeMenorCaminhoAtual[2];
+    verticeMenorCaminhoAtual[1] = INFINITO;
     Node *noInicial = getNodeByRotulo(idRotuloInicial);
     Node *noAux = noInicial->getNextNode();
     Edge *aresta = noInicial->getFirstEdge();
@@ -464,6 +466,12 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
         if(vetorPesos[aresta->getTargetId() - 1] > aresta->getWeight())
         {
             vetorPesos[aresta->getTargetId() - 1] = aresta->getWeight();
+            if(aresta->getWeight() < verticeMenorCaminhoAtual[1])
+            {
+                verticeMenorCaminhoAtual[0] = aresta->getTargetId();
+                verticeMenorCaminhoAtual[1] = aresta->getWeight();
+                cout << "verticeMenorCaminhoAtual = " << verticeMenorCaminhoAtual[0] << endl;
+            }
         }
         aresta = aresta->getNextEdge();
     }
@@ -474,6 +482,15 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
         cout<< vetorPesos[i] << endl;
     }
 
+    noAux = getNode(verticeMenorCaminhoAtual[0]);
+
+    for(it = listaVerticesDisponiveis.begin(); it!=listaVerticesDisponiveis.end();it++){
+        if(*it == verticeMenorCaminhoAtual[0])
+        {
+            listaVerticesDisponiveis.erase(it);
+            break;
+        }
+    }
 
     return "maycon";
 }
