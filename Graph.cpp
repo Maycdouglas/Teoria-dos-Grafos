@@ -431,23 +431,49 @@ void Graph::fechoTransitivoIndiretoAux(int id, int *visitados) {
 
 string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
 
+    float vetorPesos[this->order];
     int idInicial = getNodeByRotulo(idRotuloInicial)->getId();
     int idFinal = getNodeByRotulo(idRotuloFinal)->getId();
     Node *noInicial = getNodeByRotulo(idRotuloInicial);
     Node *noAux = noInicial->getNextNode();
+    Edge *aresta = noInicial->getFirstEdge();
 
     list<int> listaVerticesDisponiveis;
     list<int>::iterator it;
 
+    vetorPesos[noInicial->getId() - 1 ] = 0;
+
     while(noAux != nullptr) {
         listaVerticesDisponiveis.push_back(noAux->getId());
+        vetorPesos[noAux->getId() - 1] = INFINITO;
         noAux = noAux->getNextNode();
     }
+
+    for(int i = 0; i < this->order; i++){
+        cout<< vetorPesos[i] << endl;
+    }
+
+    cout << "======<" << endl;
 
     for(it = listaVerticesDisponiveis.begin(); it!=listaVerticesDisponiveis.end();it++){
         //printa os numeros pares começando do inicio da lista
             cout << getNode(*it)->getIdRotulo() << endl;
     }
+
+    while(aresta != nullptr) {
+        if(vetorPesos[aresta->getTargetId() - 1] > aresta->getWeight())
+        {
+            vetorPesos[aresta->getTargetId() - 1] = aresta->getWeight();
+        }
+        aresta = aresta->getNextEdge();
+    }
+
+    cout << "======<" << endl;
+
+    for(int i = 0; i < this->order; i++){
+        cout<< vetorPesos[i] << endl;
+    }
+
 
     return "maycon";
 }
