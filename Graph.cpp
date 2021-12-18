@@ -429,5 +429,28 @@ void Graph::fechoTransitivoIndiretoAux(int id, int *visitados) {
 
 }
 
+string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
+
+    int idInicial = getNodeByRotulo(idRotuloInicial)->getId();
+    int idFinal = getNodeByRotulo(idRotuloFinal)->getId();
+    Node *noInicial = getNodeByRotulo(idRotuloInicial);
+    Node *noAux = noInicial->getNextNode();
+
+    list<int> listaVerticesDisponiveis;
+    list<int>::iterator it;
+
+    while(noAux != nullptr) {
+        listaVerticesDisponiveis.push_back(noAux->getId());
+        noAux = noAux->getNextNode();
+    }
+
+    for(it = listaVerticesDisponiveis.begin(); it!=listaVerticesDisponiveis.end();it++){
+        //printa os numeros pares começando do inicio da lista
+            cout << getNode(*it)->getIdRotulo() << endl;
+    }
+
+    return "maycon";
+}
+
 
 

@@ -49,6 +49,7 @@ public:
     string fechoTransitivoIndireto(int id);
     void fechoTransitivoIndiretoAux(int id, int *visitados);
     bool visitou(int id, int*visitados2);
+    string dijkstra(int idRotuloInicial, int idRotuloFinal);
 
 
 private:
