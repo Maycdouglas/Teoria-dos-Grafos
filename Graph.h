@@ -50,6 +50,7 @@ public:
     void fechoTransitivoIndiretoAux(int id, int *visitados);
     bool visitou(int id, int*visitados2);
     string dijkstra(int idRotuloInicial, int idRotuloFinal);
+    bool estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis);
 
 
 private:

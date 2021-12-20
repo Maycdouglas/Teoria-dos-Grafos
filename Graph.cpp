@@ -434,8 +434,11 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
     float vetorPesos[this->order];
     int idInicial = getNodeByRotulo(idRotuloInicial)->getId();
     int idFinal = getNodeByRotulo(idRotuloFinal)->getId();
-    int verticeMenorCaminhoAtual[2];
-    verticeMenorCaminhoAtual[1] = INFINITO;
+    int verticeMenorCaminhoAtual;
+    float menorCaminho = INFINITO;
+    bool chegou;
+    int verticeAux;
+    float menorAux;
     Node *noInicial = getNodeByRotulo(idRotuloInicial);
     Node *noAux = noInicial->getNextNode();
     Edge *aresta = noInicial->getFirstEdge();
@@ -455,7 +458,7 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
         cout<< vetorPesos[i] << endl;
     }
 
-    cout << "======<" << endl;
+    cout << "======<1" << endl;
 
     for(it = listaVerticesDisponiveis.begin(); it!=listaVerticesDisponiveis.end();it++){
         //printa os numeros pares começando do inicio da lista
@@ -466,34 +469,109 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
         if(vetorPesos[aresta->getTargetId() - 1] > aresta->getWeight())
         {
             vetorPesos[aresta->getTargetId() - 1] = aresta->getWeight();
-            if(aresta->getWeight() < verticeMenorCaminhoAtual[1])
+            if(aresta->getWeight() < menorCaminho)
             {
-                verticeMenorCaminhoAtual[0] = aresta->getTargetId();
-                verticeMenorCaminhoAtual[1] = aresta->getWeight();
-                cout << "verticeMenorCaminhoAtual = " << verticeMenorCaminhoAtual[0] << endl;
+                verticeMenorCaminhoAtual = aresta->getTargetId();
+                menorCaminho = aresta->getWeight();
+                cout << "verticeMenorCaminhoAtual = " << verticeMenorCaminhoAtual << endl;
             }
         }
         aresta = aresta->getNextEdge();
     }
 
-    cout << "======<" << endl;
+    cout << "======<2" << endl;
 
     for(int i = 0; i < this->order; i++){
         cout<< vetorPesos[i] << endl;
     }
 
-    noAux = getNode(verticeMenorCaminhoAtual[0]);
-
     for(it = listaVerticesDisponiveis.begin(); it!=listaVerticesDisponiveis.end();it++){
-        if(*it == verticeMenorCaminhoAtual[0])
+        if(*it == verticeMenorCaminhoAtual)
         {
             listaVerticesDisponiveis.erase(it);
             break;
         }
     }
 
+    cout << "Chegou aqui 1" << endl;
+
+    while( !(listaVerticesDisponiveis.empty()) ){
+
+        cout << verticeMenorCaminhoAtual << endl;
+        noAux = getNode(verticeMenorCaminhoAtual);
+        cout << "Chegou aqui 2.1 " << endl;
+        aresta = noAux->getFirstEdge();
+        cout << "Chegou aqui 2.2" << endl;
+        menorAux = INFINITO;
+
+        cout << "Chegou aqui 2.3" << endl;
+
+
+
+        while(aresta != nullptr) {
+            chegou = false;
+            cout << "Chegou aqui 2" << endl;
+            if(estaNaLista(aresta->getTargetId(),&listaVerticesDisponiveis)){
+                cout << "CHEGOU AQUI no PRIMEIRO IF" << endl;
+                if(vetorPesos[aresta->getTargetId() - 1] > aresta->getWeight() + menorCaminho)
+                {
+                    cout << "CHEGOU AQUI no SEGUNDO IF" << endl;
+                    vetorPesos[aresta->getTargetId() - 1] = aresta->getWeight() + menorCaminho;
+                    cout << "vetorPesos[aresta->getTargetId() - 1 = " << vetorPesos[aresta->getTargetId() - 1] << endl;
+                    if(vetorPesos[aresta->getTargetId() - 1] < menorAux) {
+                        cout << "Entrou no IF" << endl;
+                        menorAux = vetorPesos[aresta->getTargetId() - 1];
+                        verticeAux = aresta->getTargetId();
+                        chegou = true;
+                    }
+                }
+            }
+            aresta = aresta->getNextEdge();
+
+        }
+        if(!chegou)
+        {
+            verticeAux = listaVerticesDisponiveis.front();
+        }
+        cout << "Chegou aqui 3" << endl;
+        cout << "verticeAux" << verticeAux << endl;
+        verticeMenorCaminhoAtual = verticeAux;
+        menorCaminho = menorAux;
+        cout << "Chegou aqui 4" << endl;
+        for(it = listaVerticesDisponiveis.begin(); it!=listaVerticesDisponiveis.end();it++){
+            cout << "Chegou aqui 5" << endl;
+            if(*it == verticeMenorCaminhoAtual)
+            {
+                cout << "Chegou aqui 6" << endl;
+                listaVerticesDisponiveis.erase(it);
+                break;
+            }
+        }
+        cout << "Chegou aqui 7" << endl;
+    }
+
+    cout << "======<3" << endl;
+
+    for(int i = 0; i < this->order; i++){
+        cout<< vetorPesos[i] << endl;
+    }
+
     return "maycon";
 }
+
+bool Graph::estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis){
+
+    cout << "CHEGOU NA FUNCAO SEPARADA" << endl;
+
+    for(list<int>::iterator it = listaVerticesDisponiveis->begin(); it!=listaVerticesDisponiveis->end();it++){
+        if(*it == idTarget){
+            return true;
+        }
+    }
+
+    return false;
+}
+
 
 
 
