@@ -51,6 +51,7 @@ public:
     bool visitou(int id, int*visitados2);
     string dijkstra(int idRotuloInicial, int idRotuloFinal);
     bool estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis);
+    string floyd(int idRotuloInicial, int idRotuloFinal );
 
 
 private:

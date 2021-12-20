@@ -572,6 +572,67 @@ bool Graph::estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis){
     return false;
 }
 
+string Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
+    float matrizVertices[this->order][this->order];
+    int i,j,k,l;
+    Node *no, *noAux;
+    Edge *aresta;
+
+    for(i = 0; i < this->order; i++) {
+        no = getNode(i + 1);
+        for(j = 0; j < this->order; j++) {
+            noAux = getNode(j + 1);
+            if(i == j) {
+                matrizVertices[i][j] = 0;
+            } else if(no->searchEdge(noAux->getId())){
+                aresta = no->hasEdgeBetween(noAux->getId());
+                matrizVertices[i][j] = aresta->getWeight();
+            } else {
+                matrizVertices[i][j] = INFINITO;
+            }
+        }
+    }
+
+    cout << "Impressao da matriz inicial: " << endl;
+
+    for(i = 0; i < this->order; i++) {
+        for(j = 0; j < this->order; j++) {
+            cout << matrizVertices[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    for( k = 0; k < this->order; k++) {
+
+        for(i = 0; i < this->order; i++) {
+            no = getNode(i + 1);
+            for(j = 0; j < this->order; j++) {
+                noAux = getNode(j + 1);
+                if(i != k && j != k && i != j){
+                    if(matrizVertices[i][k] != INFINITO && matrizVertices[k][j] != INFINITO){
+                        if(matrizVertices[i][j] > matrizVertices[i][k] + matrizVertices[k][j]){
+                            matrizVertices[i][j] = matrizVertices[i][k] + matrizVertices[k][j];
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    cout << "Impressao da matriz final: " << endl;
+
+    for(i = 0; i < this->order; i++) {
+        for(j = 0; j < this->order; j++) {
+            cout << matrizVertices[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+
+    return "maycon";
+}
+
 
 
 
