@@ -52,6 +52,7 @@ public:
     string dijkstra(int idRotuloInicial, int idRotuloFinal);
     bool estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis);
     string floyd(int idRotuloInicial, int idRotuloFinal );
+    string kruskal();
 
 
 private:

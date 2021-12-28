@@ -113,6 +113,7 @@ int menu(){
     cout << "[3] Fecho Transitivo Direto" << endl;
     cout << "[4] Dijkstra" << endl;
     cout << "[5] Floyd" << endl;
+    cout << "[6] Kruskal" << endl;
     cout << "[0] Sair" << endl;
 
     cin >> selecao;
@@ -168,6 +169,11 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
 
         case 5:{
             string teste = graph->floyd(10,20);
+            break;
+        }
+
+        case 6:{
+            string teste = graph->kruskal();
             break;
         }
 

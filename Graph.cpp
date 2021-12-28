@@ -633,6 +633,26 @@ string Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
     return "maycon";
 }
 
+string Graph::kruskal(){
+
+    Graph *arvore = new Graph(0,this->directed,this->weighted_edge,this->weighted_node);
+    int idRotulo;
+
+    for(int i = 0; i < this->order; i++) {
+        idRotulo = getNode(i + 1)->getIdRotulo();
+        arvore->insertNode(idRotulo,0);
+    }
+    for(int i = 0; i < this->order; i++) {
+        cout << arvore->getNode(i+1)->getIdRotulo() << " ";
+    }
+
+    cout << endl;
+
+    list<Edge*> listaArestas;
+
+    return "maycon";
+}
+
 
 
 
