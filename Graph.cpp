@@ -261,17 +261,19 @@ string Graph::buscaEmLargura(int id) {
 
     noAtual->setMarcado(true); //marca o no inicial
 
-    while(!filaVertices.empty()){ //loop responsável por caminhar pelos nós do grafo
-        arestaAtual = noAtual->getFirstEdge(); //aresta recebe a primeira aresta do no atual
+    while(!filaVertices.empty()){ //loop responsável por percorrer os nós da fila de vertices
+        arestaAtual = noAtual->getFirstEdge(); //aponta para a primeira aresta no Nó Atual
 
         while(arestaAtual != nullptr) {
             noAlvo = getNode(arestaAtual->getTargetId()); //no auxiliar recebe o nó que a aresta atual aponta
             idRotuloNoAtual= noAtual->getIdRotulo(); //recebe o id rotulo do nó atual
             idRotuloNoAlvo= noAlvo->getIdRotulo(); //recebe o id rotulo do nó alvo atual
             retorno = false;
+
             if(!noAlvo->getMarcado()){  //verifica se o nó alvo não está está marcado
                 //caso não esteja, a string do grafo é atualizada
                 montarArestaGrafoDOT(&grafo,&arestaDOT,idRotuloNoAtual,idRotuloNoAlvo,arestaAtual->getWeight(), retorno);
+
                 //o no alvo, a aresta e a aresta de retorno sao marcados
                 noAlvo->setMarcado(true);
                 arestaAtual->setMarcado(true);
@@ -279,9 +281,7 @@ string Graph::buscaEmLargura(int id) {
                     arestaRetorno = noAlvo->hasEdgeBetween(noAtual->getId());
                     arestaRetorno->setMarcado(true);
                 }
-
-                //o no alvo é inserido na fila
-                filaVertices.push(noAlvo->getId());
+                filaVertices.push(noAlvo->getId()); //o no alvo é inserido na fila
             } else if(!(arestaAtual->getMarcado())){ //verifica se a aresta nao foi marcada
                 retorno = true;
                 montarArestaGrafoDOT(&grafo,&arestaDOT,idRotuloNoAtual,idRotuloNoAlvo,arestaAtual->getWeight(), retorno);
@@ -293,14 +293,10 @@ string Graph::buscaEmLargura(int id) {
                     arestaRetorno->setMarcado(true);
                 }
             }
-
-            //vai para a proxima aresta do no atual
-            arestaAtual = arestaAtual->getNextEdge();
+            arestaAtual = arestaAtual->getNextEdge(); //vai para a proxima aresta do no atual
         }
-        //retira o primeiro elemento da fila
-        filaVertices.pop();
-        //vai para o proximo nó da fila
-        noAtual = getNode(filaVertices.front());
+        filaVertices.pop(); //retira o primeiro elemento da fila
+        noAtual = getNode(filaVertices.front()); //aponta para o proximo nó da fila
     }
 
     grafo += "}";
