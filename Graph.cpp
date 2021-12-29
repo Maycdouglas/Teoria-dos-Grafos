@@ -330,6 +330,18 @@ void Graph::montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloN
 
 string Graph::fechoTransitivoDireto(int idRotulo) {
 
+    //Clausula de segurança, para caso o grafo nao seja direcionado
+    if(!this->directed){
+        cout << "Este grafo nao eh direcionado!" << endl;
+        return "";
+    }
+
+    //Clausula de segurança, para caso insira um ID inválido
+    if(getNodeByRotulo(idRotulo) == nullptr){
+        cout << "Este ID nao existe no grafo!" << endl;
+        return "";
+    }
+
     int id = getNodeByRotulo(idRotulo)->getId();
     int visitados[this->order];
     int visitados2[this->order];
@@ -349,7 +361,7 @@ string Graph::fechoTransitivoDireto(int idRotulo) {
     for(int m = 0; m < this->order; m++){
 
         if(visitados[m] == 1){
-            k = getNode(m+1)->getIdRotulo();
+            k = getNode(m + 1)->getIdRotulo();
             visitados2[contador] = k;
             contador++;
         }
