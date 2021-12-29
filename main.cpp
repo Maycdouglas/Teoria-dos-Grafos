@@ -148,10 +148,13 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
             cout << "Ordem do grafo eeh: " << graph->getOrder() << endl;
             break;
         }
-            //Algoritmo Guloso Randomizado
+            //Busca em Largura
         case 2:{
 //            exportarGrafo(graph->buscaEmLargura(40), output_file);
-                output_file << graph->buscaEmLargura(40);
+                int idRotulo;
+                cout << "Insira o ID do Noh: ";
+                cin >> idRotulo;
+                output_file << graph->buscaEmLargura(idRotulo);
             break;
         }
 

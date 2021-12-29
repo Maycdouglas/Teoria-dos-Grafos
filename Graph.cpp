@@ -238,65 +238,69 @@ Node *Graph::getNodeByRotulo(int id)
 
 string Graph::buscaEmLargura(int id) {
 
-    string grafo, arestaDOT;
-    Node *no = getNodeByRotulo(id);
-    Node *noAux = nullptr;
-    Edge *aresta = nullptr;
-    Edge *arestaAux = nullptr;
-    Graph* arvore = new Graph(0, directed, weighted_edge, weighted_node);
-    int idNodeSource;
-    int idNodeTarget;
-    queue<int> filaVertices;
-    filaVertices.push(no->getId());
+    //DEVE FUNCIONAR PARA OS GRAFOS E DIGRAFOS!!!
 
-    if(this->directed)
-    {
-        grafo = "strict digraph G {\n";
-        arestaDOT = " -> ";
-    }
-    else {
-        grafo = "strict graph G {\n";
-        arestaDOT = " -- ";
+    Node *noAtual = getNodeByRotulo(id); //aponta para o nó de acordo com o idRotulo recebido
+
+    //Clausula de segurança, para caso insira um ID inválido
+    if(noAtual == nullptr){
+        cout << "Este ID nao existe no grafo!" << endl;
+        return "";
     }
 
-    no->setMarcado(true);
+    Node *noAlvo; //cria um nó ponteiro auxiliar
+    Edge *arestaAtual, *arestaRetorno; //cria uma aresta e um aresta auxiliar
+    int idRotuloNoAtual, idRotuloNoAlvo; //variaveis para receber o id dos nodes
+    queue<int> filaVertices;  //cria uma fila de ID dos vertices
+    string grafo, arestaDOT; //cria as variaveis responsaveis pelo grafo na linguagem DOT
+    bool retorno;
 
-    while(filaVertices.size() != 0){
-        aresta = no->getFirstEdge();
+    montarCabecalhoGrafoDOT(&grafo,&arestaDOT); //monta o cabeçalho do grafo
 
-        while(aresta != nullptr) {
-            noAux = getNode(aresta->getTargetId());
-            idNodeSource= no->getIdRotulo();
-            idNodeTarget= noAux->getIdRotulo();
-            if(noAux->getMarcado() == false){
-                grafo += "\t" + to_string(idNodeSource) + arestaDOT + to_string(idNodeTarget);
-                grafo += " [weight = " + to_string(aresta->getWeight());
-                grafo += ", label = " + to_string(aresta->getWeight()) + "]\n";
+    filaVertices.push(noAtual->getId()); //insere o ID do no recebido na lista
 
-                arvore->insertEdge(idNodeSource, idNodeTarget, aresta->getWeight());
-                noAux->setMarcado(true);
-                aresta->setMarcado(true);
-                arestaAux = noAux->hasEdgeBetween(no->getId());
-                arestaAux->setMarcado(true);
-                filaVertices.push(noAux->getId());
-            } else {
-                if(!(aresta->getMarcado()))
-                {
-                    grafo += "\t" + to_string(idNodeSource) + arestaDOT + to_string(idNodeTarget);
-                    grafo += " [weight = " + to_string(aresta->getWeight());
-                    grafo += ", label = " + to_string(aresta->getWeight());
-                    grafo += ", color = red]\n";
-                    aresta->setMarcado(true);
-                    arestaAux = noAux->hasEdgeBetween(no->getId());
-                    arestaAux->setMarcado(true);
+    noAtual->setMarcado(true); //marca o no inicial
+
+    while(!filaVertices.empty()){ //loop responsável por caminhar pelos nós do grafo
+        arestaAtual = noAtual->getFirstEdge(); //aresta recebe a primeira aresta do no atual
+
+        while(arestaAtual != nullptr) {
+            noAlvo = getNode(arestaAtual->getTargetId()); //no auxiliar recebe o nó que a aresta atual aponta
+            idRotuloNoAtual= noAtual->getIdRotulo(); //recebe o id rotulo do nó atual
+            idRotuloNoAlvo= noAlvo->getIdRotulo(); //recebe o id rotulo do nó alvo atual
+            retorno = false;
+            if(!noAlvo->getMarcado()){  //verifica se o nó alvo não está está marcado
+                //caso não esteja, a string do grafo é atualizada
+                montarArestaGrafoDOT(&grafo,&arestaDOT,idRotuloNoAtual,idRotuloNoAlvo,arestaAtual->getWeight(), retorno);
+                //o no alvo, a aresta e a aresta de retorno sao marcados
+                noAlvo->setMarcado(true);
+                arestaAtual->setMarcado(true);
+                if(!this->getDirected()){
+                    arestaRetorno = noAlvo->hasEdgeBetween(noAtual->getId());
+                    arestaRetorno->setMarcado(true);
+                }
+
+                //o no alvo é inserido na fila
+                filaVertices.push(noAlvo->getId());
+            } else if(!(arestaAtual->getMarcado())){ //verifica se a aresta nao foi marcada
+                retorno = true;
+                montarArestaGrafoDOT(&grafo,&arestaDOT,idRotuloNoAtual,idRotuloNoAlvo,arestaAtual->getWeight(), retorno);
+
+                //marca a aresta atual e a aresta de retorno
+                arestaAtual->setMarcado(true);
+                if(!this->getDirected()){
+                    arestaRetorno = noAlvo->hasEdgeBetween(noAtual->getId());
+                    arestaRetorno->setMarcado(true);
                 }
             }
-            aresta = aresta->getNextEdge();
+
+            //vai para a proxima aresta do no atual
+            arestaAtual = arestaAtual->getNextEdge();
         }
-
+        //retira o primeiro elemento da fila
         filaVertices.pop();
-
-        no = getNode(filaVertices.front());
+        //vai para o proximo nó da fila
+        noAtual = getNode(filaVertices.front());
     }
 
     grafo += "}";
@@ -304,7 +308,28 @@ string Graph::buscaEmLargura(int id) {
     cout << grafo << endl;
 
     return grafo;
+}
 
+void Graph::montarCabecalhoGrafoDOT(string *grafo, string *arestaDOT){
+    if(this->directed) //verifica se o grafo é direcionado
+    {
+        *grafo = "strict digraph G {\n";
+        *arestaDOT = " -> ";
+    }
+    else {
+        *grafo = "strict graph G {\n";
+        *arestaDOT = " -- ";
+    }
+}
+
+void Graph::montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloNoAtual, int idRotuloNoAlvo, float pesoAresta, bool retorno){
+    *grafo += "\t" + to_string(idRotuloNoAtual) + *arestaDOT + to_string(idRotuloNoAlvo);
+    *grafo += " [weight = " + to_string(pesoAresta);
+    *grafo += ", label = " + to_string(pesoAresta);
+    if(retorno){
+        *grafo += ", color = red";
+    }
+    *grafo += "]\n";
 }
 
 string Graph::fechoTransitivoDireto(int idRotulo) {

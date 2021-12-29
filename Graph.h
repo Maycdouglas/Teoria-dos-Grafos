@@ -54,6 +54,8 @@ public:
     string floyd(int idRotuloInicial, int idRotuloFinal );
     Graph* kruskal();
     bool estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo);
+    void montarCabecalhoGrafoDOT(string *grafo, string *arestaDOT);
+    void montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloNoAtual, int idRotuloNoAlvo, float pesoAresta, bool retorno);
 
 
 private:
