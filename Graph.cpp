@@ -405,7 +405,7 @@ string Graph::fechoTransitivoDireto(int idRotulo) {
 
     cout << grafo << endl;
 
-    return "maycon";
+    return grafo;
 
 }
 

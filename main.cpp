@@ -158,9 +158,12 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
             break;
         }
 
-            //Algoritmo Guloso Randomizado Reativo
+            //Fecho Transitivo Direto
         case 3:{
-            string teste = graph->fechoTransitivoDireto(70);
+            int idRotulo;
+            cout << "Insira o ID do Noh: ";
+            cin >> idRotulo;
+            output_file << graph->fechoTransitivoDireto(idRotulo);
             break;
         }
 

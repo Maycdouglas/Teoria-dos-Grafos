@@ -1,12 +1,2 @@
-strict graph G {
-	10 -- 20 [weight = 1.000000, label = 1.000000]
-	10 -- 30 [weight = 7.000000, label = 7.000000]
-	30 -- 40 [weight = 10.000000, label = 10.000000]
-	30 -- 80 [weight = 8.000000, label = 8.000000]
-	40 -- 50 [weight = 3.000000, label = 3.000000]
-	40 -- 60 [weight = 4.000000, label = 4.000000]
-	40 -- 70 [weight = 2.000000, label = 2.000000]
-	80 -- 70 [weight = 5.000000, label = 5.000000, color = red]
-	80 -- 90 [weight = 5.000000, label = 5.000000]
-}
+
 
