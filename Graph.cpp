@@ -633,7 +633,7 @@ string Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
     return "maycon";
 }
 
-string Graph::kruskal(){
+Graph* Graph::kruskal(){
 
     Graph *arvore = new Graph(0,this->directed,this->weighted_edge,this->weighted_node);
     int idRotulo;
@@ -706,23 +706,74 @@ string Graph::kruskal(){
     cout << "Tamanho da fila principal: " << filaArestas.size() << endl;
     cout << "Tamanho da fila auxiliar: " << filaArestasAux.size() << endl;
 
-    if(filaArestas.empty()) {
-        while(!filaArestasAux.empty()){
-            cout << filaArestasAux.front()->getWeight() << " ";
-            filaArestasAux.pop();
-        }
-    } else {
-        while(!filaArestas.empty()){
-            cout << filaArestas.front()->getWeight() << " ";
-            filaArestas.pop();
-        }
+    if(filaArestas.empty() && !filaArestasAux.empty()) {
+        filaArestas.swap(filaArestasAux);
     }
+
+//    while(!filaArestas.empty()){
+//        cout << filaArestas.front()->getWeight() << " ";
+//        filaArestas.pop();
+//    }
 
     cout << endl;
 
+    int vertices[arvore->getOrder()];
+    for(int i = 0; i < arvore->getOrder(); i++){
+        vertices[i] = i + 1;
+    }
 
+    for(int i = 0; i < arvore->getOrder(); i++){
+        cout << vertices[i] << " ";
+    }
+    cout << endl;
 
-    return "maycon";
+    int idOrigem, idAlvo, idOrigemRotulo, idAlvoRotulo;
+
+    while(!filaArestas.empty()) {
+        idOrigem = filaArestas.front()->getOriginId();
+        idAlvo = filaArestas.front()->getTargetId();
+        cout << "idOrigem = " << idOrigem << " idAlvo = " << idAlvo << endl;
+        if(!estaNaMesmaSubarvore(vertices, idOrigem, idAlvo)){
+            idOrigemRotulo = arvore->getNode(idOrigem)->getIdRotulo();
+            idAlvoRotulo = arvore->getNode(idAlvo)->getIdRotulo();
+
+            arvore->insertEdge(idOrigemRotulo,idAlvoRotulo,filaArestas.front()->getWeight());
+
+            if(vertices[idOrigem - 1] <= vertices[idAlvo - 1]){
+                for(int i = 0; i < arvore->getOrder(); i++){
+                    if(vertices[i] == vertices[idAlvo - 1]){
+                        vertices[i] = vertices[idOrigem - 1];
+                    }
+                }
+            } else {
+                for(int i = 0; i < arvore->getOrder(); i++){
+                    if(vertices[i] == vertices[idOrigem - 1]){
+                        vertices[i] = vertices[idAlvo - 1];
+                    }
+                }
+            }
+        }
+        cout << "======" << endl;
+        cout << "IMPRIMINDO VETOR: " << endl;
+        for(int i = 0; i < arvore->getOrder(); i++){
+            cout << vertices[i] << " ";
+        }
+        cout << endl;
+        filaArestas.pop();
+    }
+
+    cout << "ORDEM DA ARVORE: " << arvore->getOrder() << endl;
+    cout << "NUMERO DE ARESTAS DA ARVORE: " << arvore->getNumberEdges() << endl;
+
+    return arvore;
+}
+
+bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){
+    if(vertices[idOrigem - 1] == vertices[idAlvo - 1]){
+        cout << vertices[idOrigem - 1] << " = " << vertices[idAlvo - 1] << endl;
+        return true;
+    }
+    return false;
 }
 
 

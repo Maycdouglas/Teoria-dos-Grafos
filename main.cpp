@@ -173,7 +173,8 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
         }
 
         case 6:{
-            string teste = graph->kruskal();
+            exportarGrafo(graph->kruskal(), output_file);
+//            string teste = graph->kruskal();
             break;
         }
 

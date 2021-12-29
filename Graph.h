@@ -36,7 +36,7 @@ public:
     Node* getLastNode();
     //Other methods
     void insertNode(int id, float peso);
-    void insertEdge(int id, int target_id, float weight);
+    void insertEdge(int id_rotulo, int target_id_rotulo, float weight);
     void removeNode(int id);
     bool searchNode(int id);
     Node* getNode(int id);
@@ -52,7 +52,8 @@ public:
     string dijkstra(int idRotuloInicial, int idRotuloFinal);
     bool estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis);
     string floyd(int idRotuloInicial, int idRotuloFinal );
-    string kruskal();
+    Graph* kruskal();
+    bool estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo);
 
 
 private:
