@@ -648,7 +648,79 @@ string Graph::kruskal(){
 
     cout << endl;
 
-    list<Edge*> listaArestas;
+    queue<Edge*> filaArestas, filaArestasAux;
+    Node *no = this->first_node;
+    Edge *aresta;
+    bool encontrouPosicao;
+
+    while(no != nullptr){
+        cout << "=======" << endl;
+        cout << "Estou no Noh " << no->getIdRotulo() << endl;
+        cout << "-------" << endl;
+        aresta = no->getFirstEdge();
+        while(aresta != nullptr){
+            cout << "Estou na Aresta com alvo " << getNode(aresta->getTargetId())->getIdRotulo() << endl;
+            encontrouPosicao = false;
+            if(!aresta->getRetorno()){
+                if (filaArestas.empty() && filaArestasAux.empty()){ //verifica se as duas filas estao vazias
+                    filaArestas.push(aresta);
+                } else if(filaArestasAux.empty()) { //verifica se a fila auxiliar esta vazia
+                    if(filaArestas.back()->getWeight() <= aresta->getWeight()){
+                        filaArestas.push(aresta);
+                    } else{
+                        while(!filaArestas.empty()){
+                            if(encontrouPosicao || filaArestas.front()->getWeight() <= aresta->getWeight()){
+                                cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestas.front()->getTargetId())->getIdRotulo() << endl;
+                                filaArestasAux.push(filaArestas.front());
+                                filaArestas.pop();
+                            } else{
+                                cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(aresta->getTargetId())->getIdRotulo() << endl;
+                                filaArestasAux.push(aresta);
+                                encontrouPosicao = true;
+                            }
+                        }
+                    }
+                } else if(filaArestas.empty()){ //verifica se a fila principal esta vazia
+                    if(filaArestasAux.back()->getWeight() <= aresta->getWeight()) {
+                        filaArestasAux.push(aresta);
+                    } else {
+                        while(!filaArestasAux.empty()){
+                            if(encontrouPosicao || filaArestasAux.front()->getWeight() <= aresta->getWeight()){
+                                cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestasAux.front()->getTargetId())->getIdRotulo() << endl;
+                                filaArestas.push(filaArestasAux.front());
+                                filaArestasAux.pop();
+                            } else{
+                                cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(aresta->getTargetId())->getIdRotulo() << endl;
+                                filaArestas.push(aresta);
+                                encontrouPosicao = true;
+                            }
+                        }
+                    }
+                }
+            }
+            aresta = aresta->getNextEdge();
+        }
+        no = no->getNextNode();
+    }
+
+    cout << "Tamanho da fila principal: " << filaArestas.size() << endl;
+    cout << "Tamanho da fila auxiliar: " << filaArestasAux.size() << endl;
+
+    if(filaArestas.empty()) {
+        while(!filaArestasAux.empty()){
+            cout << filaArestasAux.front()->getWeight() << " ";
+            filaArestasAux.pop();
+        }
+    } else {
+        while(!filaArestas.empty()){
+            cout << filaArestas.front()->getWeight() << " ";
+            filaArestas.pop();
+        }
+    }
+
+    cout << endl;
+
+
 
     return "maycon";
 }
