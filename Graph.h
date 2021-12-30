@@ -45,11 +45,11 @@ public:
     //Nossos Metodos
     string buscaEmLargura(int id);
     string fechoTransitivoDireto(int id);
-    void fechoTransitivoDiretoAux(int id, bool *visitados);
+    void fechoTransitivoDiretoAux(int id, bool *verticesVisitados);
     string fechoTransitivoIndireto(int id);
     void fechoTransitivoIndiretoAux(int id, bool *visitados);
-    void gerarSubgrafoVerticeInduzido(string *grafo, string *arestaDOT, int idRotulo, bool *visitados);
-    bool visitou(int id, bool *visitados);
+    void gerarSubgrafoVerticeInduzido(string *grafo, string *arestaDOT, int idRotulo, bool *verticesVisitados);
+    bool visitou(int id, bool *verticesVisitados);
     string dijkstra(int idRotuloInicial, int idRotuloFinal);
     bool estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis);
     string floyd(int idRotuloInicial, int idRotuloFinal );
