@@ -448,11 +448,11 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
 
     //PARECE QUE TEM QUE SER PARA GRAFO E DIGRAFO!!!
 
-    float vetorPesos[this->order], menorCaminhoAux, menorCaminho = INFINITO;
+    float vetorPesos[this->order], menorCaminhoAux, menorCaminho = 0;
     int verticeMenorCaminhoAtual, verticeMenorCaminhoAux, idInicial = getNodeByRotulo(idRotuloInicial)->getId();
     Node *vetorPais[this->order];
     int idNoFinal = getNodeByRotulo(idRotuloFinal)->getId();
-    bool atualizouMenorCaminho; //PRECISO TROCAR O NOME
+    bool atualizouMenorCaminho;
     Node *noInicial = getNodeByRotulo(idRotuloInicial);
     Node *noAtual = noInicial->getNextNode();
     Node *noAlvo;
@@ -472,22 +472,7 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
         noAtual = noAtual->getNextNode();
     }
 
-    //Altera o vetorPesos com o peso das arestas pertencentes a cada vertice
-    while(arestaAtual != nullptr) {
-        if(vetorPesos[arestaAtual->getTargetId() - 1] > arestaAtual->getWeight())
-        {
-            vetorPesos[arestaAtual->getTargetId() - 1] = arestaAtual->getWeight();
-            vetorPais[arestaAtual->getTargetId() - 1] = noInicial;
-            if(arestaAtual->getWeight() < menorCaminho)
-            {
-                verticeMenorCaminhoAtual = arestaAtual->getTargetId();
-                menorCaminho = arestaAtual->getWeight();
-            }
-        }
-        arestaAtual = arestaAtual->getNextEdge();
-    }
-
-    retirarElementoLista(&listaVerticesDisponiveis,verticeMenorCaminhoAtual);
+    verticeMenorCaminhoAtual = noInicial->getId();
 
     //Percorre os vertices da lista
     while( !(listaVerticesDisponiveis.empty()) ){
