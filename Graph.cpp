@@ -342,66 +342,19 @@ string Graph::fechoTransitivoDireto(int idRotulo) {
         return "";
     }
 
-    int id = getNodeByRotulo(idRotulo)->getId();
-    int visitados[this->order];
-    int visitados2[this->order];
-
-    for(int i = 0; i < this->order; i++){
-        visitados[i] = 0;
-    }
-
-    for(int l = 0; l < this->order; l++){
-        visitados2[l] = -1;
-    }
-
-    fechoTransitivoDiretoAux(id, visitados);
-
-    int k, contador = 0;
-
-    for(int m = 0; m < this->order; m++){
-
-        if(visitados[m] == 1){
-            k = getNode(m + 1)->getIdRotulo();
-            visitados2[contador] = k;
-            contador++;
-        }
-    }
-
-    for(int j = 0; j < this->order; j++){
-        cout << visitados2[j] << endl;
-    }
-
     string grafo, arestaDOT;
-    grafo = "strict digraph G {\n";
-    arestaDOT = " -> ";
+    montarCabecalhoGrafoDOT(&grafo,&arestaDOT);
 
-    Node *no = getFirstNode();
-    Edge *aresta;
-    Node *noAux = nullptr;
-    int idNodeSource, idNodeTarget;
+    int id = getNodeByRotulo(idRotulo)->getId(); //recebe ID do No Inicial
+    bool visitados[this->order];
 
-    while (no != nullptr) {
-        aresta = no->getFirstEdge();
-        idNodeSource= no->getIdRotulo();
-        if((idNodeSource != idRotulo) && (visitou(idNodeSource,visitados2))){
-            while(aresta != nullptr) {
-                noAux = getNode(aresta->getTargetId());
-                idNodeTarget= noAux->getIdRotulo();
-
-                if(visitou(idNodeTarget, visitados2)) {
-                    grafo += "\t" + to_string(idNodeSource) + arestaDOT + to_string(idNodeTarget);
-                    grafo += " [weight = " + to_string(aresta->getWeight());
-                    grafo += ", label = " + to_string(aresta->getWeight()) + "]\n";
-                }
-
-                aresta = aresta->getNextEdge();
-            }
-        }
-        no = no->getNextNode();
-
+    for(int i = 0; i < this->order; i++){ //seta todos os elementos do array com 0
+        visitados[i] = false;
     }
 
-    grafo += "}";
+    fechoTransitivoDiretoAux(id, visitados); //inicia busca em profundidade
+
+    gerarSubgrafoVerticeInduzido(&grafo,&arestaDOT,idRotulo,visitados);
 
     cout << grafo << endl;
 
@@ -409,16 +362,16 @@ string Graph::fechoTransitivoDireto(int idRotulo) {
 
 }
 
-void Graph::fechoTransitivoDiretoAux(int id, int *visitados) {
+void Graph::fechoTransitivoDiretoAux(int id, bool *visitados) {
 
     Node *no = getNode(id);
     Edge *aresta= no->getFirstEdge();
 
-    visitados[id - 1] = 1;
+    visitados[id - 1] = true;
 
     while(aresta != nullptr) {
 
-        if( (visitados[aresta->getTargetId() - 1] == 0) ){
+        if(!visitados[aresta->getTargetId() - 1]){
             fechoTransitivoDiretoAux(aresta->getTargetId(), visitados);
         }
 
@@ -427,11 +380,41 @@ void Graph::fechoTransitivoDiretoAux(int id, int *visitados) {
 
 }
 
-bool Graph::visitou(int id, int *visitados2) {
+void Graph::gerarSubgrafoVerticeInduzido(string *grafo, string *arestaDOT, int idRotuloNoOrigem, bool *visitados){
+    Node *no = getFirstNode();
+    Edge *aresta;
+    Node *noAux = nullptr;
+    int idRotuloNoAtual, idRotuloNoAlvo, idNoAtual, idNoAlvo;
+
     for(int i = 0; i < this->order; i++){
-        if(visitados2[i] == id){
-            return true;
+        if(visitados[i]){
+            no = getNode(i + 1);
+            aresta = no->getFirstEdge();
+            idRotuloNoAtual = no->getIdRotulo();
+            idNoAtual = no->getId();
+
+            if((idRotuloNoAtual != idRotuloNoOrigem))
+            {
+                while(aresta != nullptr){
+                    noAux = getNode(aresta->getTargetId());
+                    idRotuloNoAlvo = noAux->getIdRotulo();
+                    idNoAlvo = noAux->getId();
+
+                    if(visitou(idNoAlvo, visitados)) {
+                        montarArestaGrafoDOT(grafo,arestaDOT,idRotuloNoAtual,idRotuloNoAlvo,aresta->getWeight(),false);
+                    }
+                    aresta = aresta->getNextEdge();
+                }
+            }
         }
+    }
+    *grafo += "}";
+}
+
+bool Graph::visitou(int id, bool *visitados) {
+
+    if(visitados[id - 1]){
+        return true;
     }
     return false;
 }
@@ -444,7 +427,7 @@ string Graph::fechoTransitivoIndireto(int idRotulo) {
 
 }
 
-void Graph::fechoTransitivoIndiretoAux(int id, int *visitados) {
+void Graph::fechoTransitivoIndiretoAux(int id, bool *visitados) {
 
     Node *no = getNode(id);
     Edge *aresta= no->getFirstEdge();
