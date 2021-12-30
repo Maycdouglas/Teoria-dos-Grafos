@@ -50,7 +50,9 @@ public:
     void fechoTransitivoIndiretoAux(int id, bool *visitados);
     void gerarSubgrafoVerticeInduzido(string *grafo, string *arestaDOT, int idRotulo, bool *verticesVisitados);
     bool visitou(int id, bool *verticesVisitados);
+    string dijkstra2(int idRotuloInicial, int idRotuloFinal);
     string dijkstra(int idRotuloInicial, int idRotuloFinal);
+    int extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVerticesDisponiveis);
     bool estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis);
     void retirarElementoLista(list<int> *listaVerticesDisponiveis, int verticeMenorCaminhoAtual);
     string floyd(int idRotuloInicial, int idRotuloFinal );

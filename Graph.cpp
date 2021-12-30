@@ -444,22 +444,16 @@ void Graph::fechoTransitivoIndiretoAux(int id, bool *visitados) {
 
 }
 
-string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
+string Graph::dijkstra2(int idRotuloInicial, int idRotuloFinal) {
 
-    //PARECE QUE TEM QUE SER PARA GRAFO E DIGRAFO!!!
+    //AINDA NAO FUNCIONA PARA DIGRAFOS!!!
 
     float vetorPesos[this->order], menorCaminhoAux, menorCaminho = 0;
-    int verticeMenorCaminhoAtual, verticeMenorCaminhoAux, idInicial = getNodeByRotulo(idRotuloInicial)->getId();
-    Node *vetorPais[this->order];
-    int idNoFinal = getNodeByRotulo(idRotuloFinal)->getId();
+    int verticeMenorCaminhoAtual, verticeMenorCaminhoAux, idInicial = getNodeByRotulo(idRotuloInicial)->getId(), idNoFinal = getNodeByRotulo(idRotuloFinal)->getId();
     bool atualizouMenorCaminho;
-    Node *noInicial = getNodeByRotulo(idRotuloInicial);
-    Node *noAtual = noInicial->getNextNode();
-    Node *noAlvo;
+    Node *vetorPais[this->order], *noAlvo, *noInicial = getNodeByRotulo(idRotuloInicial), *noAtual = noInicial->getNextNode();
     Edge *arestaAtual = noInicial->getFirstEdge();
-
     list<int> listaVerticesDisponiveis;
-    list<int>::iterator it;
 
     vetorPesos[ noInicial->getId() - 1 ] = 0;
     vetorPais[ noInicial->getId() - 1 ] = nullptr;
@@ -473,13 +467,15 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
     }
 
     verticeMenorCaminhoAtual = noInicial->getId();
-
+    Edge *arestaAux = nullptr;
     //Percorre os vertices da lista
     while( !(listaVerticesDisponiveis.empty()) ){
 
         noAtual = getNode(verticeMenorCaminhoAtual);
         arestaAtual = noAtual->getFirstEdge();
         menorCaminhoAux = INFINITO;
+
+        cout << "CHEGOU AQUI 1" << endl;
 
         //Percorre as aresta do nó
         while(arestaAtual != nullptr) {
@@ -488,27 +484,38 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
             if(estaNaLista(noAlvo->getId(),&listaVerticesDisponiveis)){ //verifica se o no alvo está na lista de vertices disponiveis
                 if(vetorPesos[noAlvo->getId() - 1] > arestaAtual->getWeight() + menorCaminho) //verifica se o peso atual do vertice alvo é maior que o peso novo
                 {
+                    cout << "CHEGOU AQUI 2" << endl;
                     vetorPesos[noAlvo->getId() - 1] = arestaAtual->getWeight() + menorCaminho;
                     vetorPais[noAlvo->getId() - 1] = noAtual;
                     if(vetorPesos[noAlvo->getId() - 1] < menorCaminhoAux) { //verifica se o peso da aresta é menor que o atual menor
+                        cout << "CHEGOU AQUI 3" << endl;
+                        arestaAux = arestaAtual;
                         menorCaminhoAux = vetorPesos[noAlvo->getId() - 1];
                         verticeMenorCaminhoAux = noAlvo->getId();
                         atualizouMenorCaminho = true;
                     }
                 }
             }
+            cout << "CHEGOU AQUI 4" << endl;
             arestaAtual = arestaAtual->getNextEdge();
         }
-        if(!atualizouMenorCaminho) //se o menor vertice nao foi atualizado, o proximo vertice recebe o primeiro da lista
-        {
-            verticeMenorCaminhoAux = listaVerticesDisponiveis.front();
+        if(noAtual->getOutDegree() != 0){
+            cout << "CHEGOU AQUI 5" << endl;
+            if(!atualizouMenorCaminho) //se o menor vertice nao foi atualizado, o proximo vertice recebe o primeiro da lista
+            {
+                cout << "CHEGOU AQUI 6" << endl;
+                verticeMenorCaminhoAux = listaVerticesDisponiveis.front();
+            }
+            cout << "CHEGOU AQUI 7" << endl;
+            verticeMenorCaminhoAtual = verticeMenorCaminhoAux;
+            menorCaminho = menorCaminhoAux;
+            //Percorre a lista de vertices
+            cout << "CHEGOU AQUI 8" << endl;
+            retirarElementoLista(&listaVerticesDisponiveis,verticeMenorCaminhoAtual);
+            cout << "CHEGOU AQUI 9" << endl;
+        } else{
+            verticeMenorCaminhoAtual = arestaAux->getOriginId();
         }
-
-        verticeMenorCaminhoAtual = verticeMenorCaminhoAux;
-        menorCaminho = menorCaminhoAux;
-
-        //Percorre a lista de vertices
-        retirarElementoLista(&listaVerticesDisponiveis,verticeMenorCaminhoAtual);
 
     }
 
@@ -526,16 +533,154 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
     return "maycon";
 }
 
+string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
+
+    //AINDA NAO FUNCIONA PARA DIGRAFOS!!!
+
+    Node *noInicial = getNodeByRotulo(idRotuloInicial), *noFinal = getNodeByRotulo(idRotuloFinal);
+    //Clausula de segurança para nós que não possuem Out Degree
+    if(noInicial->getOutDegree() < 1){
+        cout << "O noh inserido nao possui arestas saindo dele!" << endl;
+        return "";
+    }
+    Node *noAtual = noInicial->getNextNode();
+    Node *noAlvo;
+
+    float vetorCustos[this->order];
+    Node *vetorPais[this->order];
+    list<int> listaVerticesDisponiveis;
+    Edge *arestaAtual;
+    float menorCustoCaminho = INFINITO;
+    float menorCustoCaminhoAux;
+    int idNoMenorCustoCaminho;
+    int idNoMenorCustoCaminhoAux;
+
+    vetorCustos[noInicial->getId() - 1] = 0;
+    vetorPais[noInicial->getId() - 1] = nullptr;
+
+    cout << "Chegou aqui 1" << endl;
+
+    //Percorre os nós do grafo para popular a lista e os vetores
+    while(noAtual != nullptr) {
+        listaVerticesDisponiveis.push_back(noAtual->getId());
+
+        arestaAtual = noInicial->hasEdgeBetween(noAtual->getId());
+
+        if(arestaAtual != nullptr) { //caso o nó atual seja um vizinho do nó inicial os vetores sao atualizados de acordo
+            vetorPais[noAtual->getId() - 1] = noInicial;
+            vetorCustos[noAtual->getId() - 1] = arestaAtual->getWeight();
+            if(arestaAtual->getWeight() < menorCustoCaminho){ //se o peso da aresta for menor que o atual menor custo vai atualizar esse custo
+                menorCustoCaminho = arestaAtual->getWeight();
+                idNoMenorCustoCaminho = noAtual->getId();
+            }
+        } else {
+            vetorCustos[noAtual->getId() - 1] = INFINITO;
+            vetorPais[noAtual->getId() - 1] = nullptr;
+        }
+
+        noAtual = noAtual->getNextNode();
+    }
+
+    cout << "Chegou aqui 2" << endl;
+
+    noAtual = getNode(idNoMenorCustoCaminho);
+    retirarElementoLista(&listaVerticesDisponiveis,idNoMenorCustoCaminho);
+
+    cout << "Chegou aqui 3" << endl;
+
+    int contador;
+
+    while(!listaVerticesDisponiveis.empty()){
+
+        cout << "Estou no noh: " << noAtual->getIdRotulo() << " " << noAtual->getId() << endl;
+
+        if(noAtual->getOutDegree() < 1){
+            idNoMenorCustoCaminho = extrairIdMenorCustoDisponivel(vetorCustos,&listaVerticesDisponiveis);
+            menorCustoCaminho = vetorCustos[idNoMenorCustoCaminho - 1];
+        } else{
+            contador = 0;
+            menorCustoCaminhoAux = INFINITO;
+            arestaAtual = noAtual->getFirstEdge();
+            while(arestaAtual != nullptr){
+                noAlvo = getNode(arestaAtual->getTargetId());
+                cout << "O no alvo da aresta atual eh: " << noAlvo->getIdRotulo() << " " << noAlvo->getId() << endl;
+                cout << "Chegou aqui 4" << endl;
+                if(estaNaLista(noAlvo->getId(),&listaVerticesDisponiveis)){
+                    cout << "Chegou aqui 5" << endl;
+                    if(vetorCustos[noAlvo->getId() - 1] > arestaAtual->getWeight() + menorCustoCaminho){
+                        cout << "Chegou aqui 5.1" << endl;
+                        vetorCustos[noAlvo->getId() - 1] = arestaAtual->getWeight() + menorCustoCaminho;
+                        vetorPais[noAlvo->getId() - 1] = noAtual;
+                        if(vetorCustos[noAlvo->getId() - 1] < menorCustoCaminhoAux){
+                            cout << "Chegou aqui 5.2" << endl;
+                            menorCustoCaminhoAux = vetorCustos[noAlvo->getId() - 1];
+                            idNoMenorCustoCaminhoAux = noAlvo->getId();
+                            contador++;
+                        }
+                    }
+                }
+                arestaAtual = arestaAtual->getNextEdge();
+            }
+            cout << "Chegou aqui 6" << endl;
+            if(contador > 0){
+                menorCustoCaminho = menorCustoCaminhoAux;
+                idNoMenorCustoCaminho = idNoMenorCustoCaminhoAux;
+            } else{
+                idNoMenorCustoCaminho = extrairIdMenorCustoDisponivel(vetorCustos,&listaVerticesDisponiveis);
+                menorCustoCaminho = vetorCustos[idNoMenorCustoCaminho - 1];
+            }
+        }
+        cout << "Chegou aqui 7" << endl;
+        noAtual = getNode(idNoMenorCustoCaminho);
+        retirarElementoLista(&listaVerticesDisponiveis,idNoMenorCustoCaminho);
+        cout << "Chegou aqui 8" << endl;
+    }
+
+    cout << "======<3" << endl;
+    //Imprime vetor de pesos para conferir
+    for(int i = 0; i < this->order; i++){
+        cout<< "Custo vertice " << i + 1 << ": " << vetorCustos[i] << endl;
+        if(vetorPais[i] != nullptr){
+            cout << "Pai do vertice " << i + 1 << ": " <<vetorPais[i]->getIdRotulo() << endl;
+        } else{
+            cout << "Pai do vertice: "<< "Pai nulo" << endl;
+        }
+    }
+
+    return "maycon";
+
+}
+
+int Graph::extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVerticesDisponiveis){
+
+    int idMenorCusto, menorCusto = INFINITO;
+
+    cout << "Chegou aqui 50" << endl;
+
+    for(int i = 0; i < this->order; i++){
+        if(estaNaLista(i + 1,listaVerticesDisponiveis)){
+            if(vetorCustos[i] < menorCusto){
+                menorCusto = vetorCustos[i];
+                idMenorCusto = i + 1;
+            }
+        }
+    }
+
+    return idMenorCusto;
+}
+
 bool Graph::estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis){
 
     cout << "CHEGOU NA FUNCAO SEPARADA" << endl;
 
     for(list<int>::iterator it = listaVerticesDisponiveis->begin(); it!=listaVerticesDisponiveis->end();it++){
+        cout << *it << " ";
         if(*it == idTarget){
+            cout << endl;
             return true;
         }
     }
-
+    cout << endl;
     return false;
 }
 
