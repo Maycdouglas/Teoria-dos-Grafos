@@ -169,7 +169,12 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
 
             //Algoritmo Guloso Randomizado Reativo
         case 4:{
-            string teste = graph->dijkstra(10,20);
+            int idRotuloInicial, idRotuloFinal;
+            cout << "Insira o ID do Noh Inicial: ";
+            cin >> idRotuloInicial;
+            cout << "\nInsira o ID do Noh Final: ";
+            cin >> idRotuloFinal;
+            string teste = graph->dijkstra(idRotuloInicial,idRotuloFinal);
             break;
         }
 

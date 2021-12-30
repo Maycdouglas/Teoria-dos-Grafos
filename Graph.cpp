@@ -448,127 +448,94 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
 
     //PARECE QUE TEM QUE SER PARA GRAFO E DIGRAFO!!!
 
-    float vetorPesos[this->order], menorAux, menorCaminho = INFINITO;
-    int idInicial = getNodeByRotulo(idRotuloInicial)->getId();
-    int idFinal = getNodeByRotulo(idRotuloFinal)->getId();
-    int verticeMenorCaminhoAtual;
-    bool chegou;
-    int verticeAux;
+    float vetorPesos[this->order], menorCaminhoAux, menorCaminho = INFINITO;
+    int verticeMenorCaminhoAtual, verticeMenorCaminhoAux, idInicial = getNodeByRotulo(idRotuloInicial)->getId();
+    Node *vetorPais[this->order];
+    int idNoFinal = getNodeByRotulo(idRotuloFinal)->getId();
+    bool atualizouMenorCaminho; //PRECISO TROCAR O NOME
     Node *noInicial = getNodeByRotulo(idRotuloInicial);
-    Node *noAux = noInicial->getNextNode();
-    Edge *aresta = noInicial->getFirstEdge();
+    Node *noAtual = noInicial->getNextNode();
+    Node *noAlvo;
+    Edge *arestaAtual = noInicial->getFirstEdge();
 
     list<int> listaVerticesDisponiveis;
     list<int>::iterator it;
 
-    vetorPesos[noInicial->getId() - 1 ] = 0;
+    vetorPesos[ noInicial->getId() - 1 ] = 0;
+    vetorPais[ noInicial->getId() - 1 ] = nullptr;
 
-    while(noAux != nullptr) {
-        listaVerticesDisponiveis.push_back(noAux->getId());
-        vetorPesos[noAux->getId() - 1] = INFINITO;
-        noAux = noAux->getNextNode();
+    //Insere nós na lista de vertices disponiveis e seta o vetor de pesos com o valor INFINITO
+    while(noAtual != nullptr) {
+        listaVerticesDisponiveis.push_back(noAtual->getId());
+        vetorPesos[noAtual->getId() - 1] = INFINITO;
+        vetorPais[noAtual->getId() - 1] = nullptr;
+        noAtual = noAtual->getNextNode();
     }
 
-    for(int i = 0; i < this->order; i++){
-        cout<< vetorPesos[i] << endl;
-    }
-
-    cout << "======<1" << endl;
-
-    for(it = listaVerticesDisponiveis.begin(); it!=listaVerticesDisponiveis.end();it++){
-        //printa os numeros pares começando do inicio da lista
-            cout << getNode(*it)->getIdRotulo() << endl;
-    }
-
-    while(aresta != nullptr) {
-        if(vetorPesos[aresta->getTargetId() - 1] > aresta->getWeight())
+    //Altera o vetorPesos com o peso das arestas pertencentes a cada vertice
+    while(arestaAtual != nullptr) {
+        if(vetorPesos[arestaAtual->getTargetId() - 1] > arestaAtual->getWeight())
         {
-            vetorPesos[aresta->getTargetId() - 1] = aresta->getWeight();
-            if(aresta->getWeight() < menorCaminho)
+            vetorPesos[arestaAtual->getTargetId() - 1] = arestaAtual->getWeight();
+            vetorPais[arestaAtual->getTargetId() - 1] = noInicial;
+            if(arestaAtual->getWeight() < menorCaminho)
             {
-                verticeMenorCaminhoAtual = aresta->getTargetId();
-                menorCaminho = aresta->getWeight();
-                cout << "verticeMenorCaminhoAtual = " << verticeMenorCaminhoAtual << endl;
+                verticeMenorCaminhoAtual = arestaAtual->getTargetId();
+                menorCaminho = arestaAtual->getWeight();
             }
         }
-        aresta = aresta->getNextEdge();
+        arestaAtual = arestaAtual->getNextEdge();
     }
 
-    cout << "======<2" << endl;
+    retirarElementoLista(&listaVerticesDisponiveis,verticeMenorCaminhoAtual);
 
-    for(int i = 0; i < this->order; i++){
-        cout<< vetorPesos[i] << endl;
-    }
-
-    for(it = listaVerticesDisponiveis.begin(); it!=listaVerticesDisponiveis.end();it++){
-        if(*it == verticeMenorCaminhoAtual)
-        {
-            listaVerticesDisponiveis.erase(it);
-            break;
-        }
-    }
-
-    cout << "Chegou aqui 1" << endl;
-
+    //Percorre os vertices da lista
     while( !(listaVerticesDisponiveis.empty()) ){
 
-        cout << verticeMenorCaminhoAtual << endl;
-        noAux = getNode(verticeMenorCaminhoAtual);
-        cout << "Chegou aqui 2.1 " << endl;
-        aresta = noAux->getFirstEdge();
-        cout << "Chegou aqui 2.2" << endl;
-        menorAux = INFINITO;
+        noAtual = getNode(verticeMenorCaminhoAtual);
+        arestaAtual = noAtual->getFirstEdge();
+        menorCaminhoAux = INFINITO;
 
-        cout << "Chegou aqui 2.3" << endl;
-
-
-
-        while(aresta != nullptr) {
-            chegou = false;
-            cout << "Chegou aqui 2" << endl;
-            if(estaNaLista(aresta->getTargetId(),&listaVerticesDisponiveis)){
-                cout << "CHEGOU AQUI no PRIMEIRO IF" << endl;
-                if(vetorPesos[aresta->getTargetId() - 1] > aresta->getWeight() + menorCaminho)
+        //Percorre as aresta do nó
+        while(arestaAtual != nullptr) {
+            atualizouMenorCaminho = false;
+            noAlvo = getNode(arestaAtual->getTargetId());
+            if(estaNaLista(noAlvo->getId(),&listaVerticesDisponiveis)){ //verifica se o no alvo está na lista de vertices disponiveis
+                if(vetorPesos[noAlvo->getId() - 1] > arestaAtual->getWeight() + menorCaminho) //verifica se o peso atual do vertice alvo é maior que o peso novo
                 {
-                    cout << "CHEGOU AQUI no SEGUNDO IF" << endl;
-                    vetorPesos[aresta->getTargetId() - 1] = aresta->getWeight() + menorCaminho;
-                    cout << "vetorPesos[aresta->getTargetId() - 1 = " << vetorPesos[aresta->getTargetId() - 1] << endl;
-                    if(vetorPesos[aresta->getTargetId() - 1] < menorAux) {
-                        cout << "Entrou no IF" << endl;
-                        menorAux = vetorPesos[aresta->getTargetId() - 1];
-                        verticeAux = aresta->getTargetId();
-                        chegou = true;
+                    vetorPesos[noAlvo->getId() - 1] = arestaAtual->getWeight() + menorCaminho;
+                    vetorPais[noAlvo->getId() - 1] = noAtual;
+                    if(vetorPesos[noAlvo->getId() - 1] < menorCaminhoAux) { //verifica se o peso da aresta é menor que o atual menor
+                        menorCaminhoAux = vetorPesos[noAlvo->getId() - 1];
+                        verticeMenorCaminhoAux = noAlvo->getId();
+                        atualizouMenorCaminho = true;
                     }
                 }
             }
-            aresta = aresta->getNextEdge();
-
+            arestaAtual = arestaAtual->getNextEdge();
         }
-        if(!chegou)
+        if(!atualizouMenorCaminho) //se o menor vertice nao foi atualizado, o proximo vertice recebe o primeiro da lista
         {
-            verticeAux = listaVerticesDisponiveis.front();
+            verticeMenorCaminhoAux = listaVerticesDisponiveis.front();
         }
-        cout << "Chegou aqui 3" << endl;
-        cout << "verticeAux" << verticeAux << endl;
-        verticeMenorCaminhoAtual = verticeAux;
-        menorCaminho = menorAux;
-        cout << "Chegou aqui 4" << endl;
-        for(it = listaVerticesDisponiveis.begin(); it!=listaVerticesDisponiveis.end();it++){
-            cout << "Chegou aqui 5" << endl;
-            if(*it == verticeMenorCaminhoAtual)
-            {
-                cout << "Chegou aqui 6" << endl;
-                listaVerticesDisponiveis.erase(it);
-                break;
-            }
-        }
-        cout << "Chegou aqui 7" << endl;
+
+        verticeMenorCaminhoAtual = verticeMenorCaminhoAux;
+        menorCaminho = menorCaminhoAux;
+
+        //Percorre a lista de vertices
+        retirarElementoLista(&listaVerticesDisponiveis,verticeMenorCaminhoAtual);
+
     }
 
     cout << "======<3" << endl;
-
+    //Imprime vetor de pesos para conferir
     for(int i = 0; i < this->order; i++){
         cout<< vetorPesos[i] << endl;
+        if(vetorPais[i] != nullptr){
+            cout << vetorPais[i]->getIdRotulo() << endl;
+        } else{
+            cout << "Pai nulo" << endl;
+        }
     }
 
     return "maycon";
@@ -585,6 +552,16 @@ bool Graph::estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis){
     }
 
     return false;
+}
+
+void Graph::retirarElementoLista(list<int> *listaVerticesDisponiveis, int verticeMenorCaminhoAtual){
+    for(list<int>::iterator it = listaVerticesDisponiveis->begin(); it!=listaVerticesDisponiveis->end();it++){
+        if(*it == verticeMenorCaminhoAtual)
+        {
+            listaVerticesDisponiveis->erase(it);
+            break;
+        }
+    }
 }
 
 string Graph::floyd(int idRotuloInicial, int idRotuloFinal ){

@@ -52,6 +52,7 @@ public:
     bool visitou(int id, bool *verticesVisitados);
     string dijkstra(int idRotuloInicial, int idRotuloFinal);
     bool estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis);
+    void retirarElementoLista(list<int> *listaVerticesDisponiveis, int verticeMenorCaminhoAtual);
     string floyd(int idRotuloInicial, int idRotuloFinal );
     Graph* kruskal();
     bool estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo);
