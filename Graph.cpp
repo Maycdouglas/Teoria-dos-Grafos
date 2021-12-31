@@ -535,7 +535,15 @@ string Graph::dijkstra2(int idRotuloInicial, int idRotuloFinal) {
 
 string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
 
+    //FALTA TRATAR OS PESOS NEGATIVOS
+
     Node *noInicial = getNodeByRotulo(idRotuloInicial), *noFinal = getNodeByRotulo(idRotuloFinal);
+
+    if(noInicial == nullptr || noFinal == nullptr){
+        cout << "Insira um noh válido!" << endl;
+        return "";
+    }
+
     //Clausula de segurança para nós que não possuem Out Degree
     if(noInicial->getOutDegree() < 1){
         cout << "O noh inserido nao possui arestas saindo dele!" << endl;
@@ -653,10 +661,41 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
     }
 
     //Montar caminho
-    
+    string grafo = gerarCaminhoMinimo(vetorCustos,vetorPais,noInicial,noFinal);
 
-    return "maycon";
+    cout << grafo << endl;
 
+    return grafo;
+
+}
+
+string Graph::gerarCaminhoMinimo(float *vetorCustos, Node **vetorPais, Node *noInicial, Node *noFinal){
+    string grafo, arestaDOT;
+    montarCabecalhoGrafoDOT(&grafo,&arestaDOT);
+
+    int idRotuloNoAtual, idRotuloNoAlvo;
+    Node *noAtual = noFinal;
+    Node *noAlvo = vetorPais[noFinal->getId() - 1];
+    Edge *arestaAtual = noAlvo->hasEdgeBetween(noAtual->getId());
+
+    idRotuloNoAtual = noAtual->getIdRotulo();
+    idRotuloNoAlvo = noAlvo->getIdRotulo();
+
+    float pesoArestaAtual;
+    pesoArestaAtual = arestaAtual->getWeight();
+
+    while(noAtual != noInicial){
+        idRotuloNoAtual = noAtual->getIdRotulo();
+        idRotuloNoAlvo = noAlvo->getIdRotulo();
+        arestaAtual = noAlvo->hasEdgeBetween(noAtual->getId());
+        pesoArestaAtual = arestaAtual->getWeight();
+        montarArestaGrafoDOT(&grafo,&arestaDOT,idRotuloNoAtual,idRotuloNoAlvo,pesoArestaAtual,false);
+        noAtual = noAlvo;
+        noAlvo = vetorPais[noAlvo->getId() - 1];
+    }
+    grafo += "}";
+
+    return grafo;
 }
 
 int Graph::extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVerticesDisponiveis){

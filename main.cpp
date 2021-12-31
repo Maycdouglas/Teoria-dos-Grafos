@@ -174,7 +174,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
             cin >> idRotuloInicial;
             cout << "\nInsira o ID do Noh Final: ";
             cin >> idRotuloFinal;
-            string teste = graph->dijkstra(idRotuloInicial,idRotuloFinal);
+            output_file << graph->dijkstra(idRotuloInicial,idRotuloFinal);
             break;
         }
 

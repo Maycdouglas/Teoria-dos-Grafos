@@ -52,6 +52,7 @@ public:
     bool visitou(int id, bool *verticesVisitados);
     string dijkstra2(int idRotuloInicial, int idRotuloFinal);
     string dijkstra(int idRotuloInicial, int idRotuloFinal);
+    string gerarCaminhoMinimo(float *vetorCustos, Node **vetorPais, Node *noInicial, Node *noFinal);
     int extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVerticesDisponiveis);
     bool estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis);
     void retirarElementoLista(list<int> *listaVerticesDisponiveis, int verticeMenorCaminhoAtual);
