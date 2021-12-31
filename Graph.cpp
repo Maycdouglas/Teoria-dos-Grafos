@@ -535,15 +535,13 @@ string Graph::dijkstra2(int idRotuloInicial, int idRotuloFinal) {
 
 string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
 
-    //AINDA NAO FUNCIONA PARA DIGRAFOS!!!
-
     Node *noInicial = getNodeByRotulo(idRotuloInicial), *noFinal = getNodeByRotulo(idRotuloFinal);
     //Clausula de segurança para nós que não possuem Out Degree
     if(noInicial->getOutDegree() < 1){
         cout << "O noh inserido nao possui arestas saindo dele!" << endl;
         return "";
     }
-    Node *noAtual = noInicial->getNextNode();
+    Node *noAtual = first_node;
     Node *noAlvo;
 
     float vetorCustos[this->order];
@@ -555,14 +553,13 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
     int idNoMenorCustoCaminho;
     int idNoMenorCustoCaminhoAux;
 
-    vetorCustos[noInicial->getId() - 1] = 0;
-    vetorPais[noInicial->getId() - 1] = nullptr;
-
     cout << "Chegou aqui 1" << endl;
 
     //Percorre os nós do grafo para popular a lista e os vetores
     while(noAtual != nullptr) {
-        listaVerticesDisponiveis.push_back(noAtual->getId());
+        if(noAtual != noInicial){
+            listaVerticesDisponiveis.push_back(noAtual->getId());
+        }
 
         arestaAtual = noInicial->hasEdgeBetween(noAtual->getId());
 
@@ -581,6 +578,8 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
         noAtual = noAtual->getNextNode();
     }
 
+    vetorCustos[noInicial->getId() - 1] = 0;
+
     cout << "Chegou aqui 2" << endl;
 
     noAtual = getNode(idNoMenorCustoCaminho);
@@ -588,7 +587,8 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
 
     cout << "Chegou aqui 3" << endl;
 
-    int contador;
+//    int contador;
+    bool atualizouAuxiliaresMenorCusto;
 
     while(!listaVerticesDisponiveis.empty()){
 
@@ -596,9 +596,13 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
 
         if(noAtual->getOutDegree() < 1){
             idNoMenorCustoCaminho = extrairIdMenorCustoDisponivel(vetorCustos,&listaVerticesDisponiveis);
+            if(idNoMenorCustoCaminho < 1){
+               break;
+            }
             menorCustoCaminho = vetorCustos[idNoMenorCustoCaminho - 1];
         } else{
-            contador = 0;
+//            contador = 0;
+            atualizouAuxiliaresMenorCusto = false;
             menorCustoCaminhoAux = INFINITO;
             arestaAtual = noAtual->getFirstEdge();
             while(arestaAtual != nullptr){
@@ -615,14 +619,15 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
                             cout << "Chegou aqui 5.2" << endl;
                             menorCustoCaminhoAux = vetorCustos[noAlvo->getId() - 1];
                             idNoMenorCustoCaminhoAux = noAlvo->getId();
-                            contador++;
+                            atualizouAuxiliaresMenorCusto = true;
+//                            contador++;
                         }
                     }
                 }
                 arestaAtual = arestaAtual->getNextEdge();
             }
             cout << "Chegou aqui 6" << endl;
-            if(contador > 0){
+            if(atualizouAuxiliaresMenorCusto){
                 menorCustoCaminho = menorCustoCaminhoAux;
                 idNoMenorCustoCaminho = idNoMenorCustoCaminhoAux;
             } else{
@@ -647,13 +652,17 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
         }
     }
 
+    //Montar caminho
+    
+
     return "maycon";
 
 }
 
 int Graph::extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVerticesDisponiveis){
 
-    int idMenorCusto, menorCusto = INFINITO;
+    int idMenorCusto = 0;
+    int menorCusto = INFINITO;
 
     cout << "Chegou aqui 50" << endl;
 
