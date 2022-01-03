@@ -54,7 +54,7 @@ public:
     string floyd(int idRotuloInicial, int idRotuloFinal );
     Graph* kruskal();
     bool estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo);
-    Graph* prim();
+    Graph* prim(int *subconjuntoVertices, int qntdVertices);
     string ordenacaoTopologica(Graph *graph);
     void ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack);
 

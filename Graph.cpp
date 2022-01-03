@@ -7,6 +7,7 @@
 #include <queue>
 #include <list>
 #include <cmath>
+#include <math.h>
 #include <cstdlib>
 #include <ctime>
 #include <cfloat>
@@ -822,7 +823,7 @@ bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){
 //    Stack.push(v);
 //}
 
-Graph* Graph::prim()
+Graph* Graph::prim(int *subconjuntoVertices, int qntdVertices)
 {
     if (!this->weighted_edge && this->directed){
         cout << "ERRO: grafo direcionado e/ou arestas sem peso" << endl;
@@ -832,6 +833,8 @@ Graph* Graph::prim()
     Graph *arvore = new Graph(0,this->directed,this->weighted_edge,this->weighted_node);
     vector<int> visitados;
     visitados.push_back(this->first_node->getId());
+    
+
 
     while (visitados.size() != this->order){
         int idEdgeMinS;

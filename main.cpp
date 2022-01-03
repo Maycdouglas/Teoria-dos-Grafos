@@ -180,8 +180,25 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
         }
 
         case 10:{
-            exportarGrafo(graph->prim(), output_file);
-//            string teste = graph->kruskal();
+            int subconjuntoVertices[graph->getOrder()];
+            int qntdVertices;
+            int vertice;
+            cout << "Insira a quantidade de vertices presentes no seu subconjunto: ";
+            cin >> qntdVertices;
+            Graph *arvore;
+
+            if(qntdVertices > 1){
+                for(int i = 0; i < qntdVertices; i++){
+                    cin >> subconjuntoVertices[i];
+                }
+                arvore = graph->prim(subconjuntoVertices,qntdVertices);
+                if(arvore != nullptr){
+                    exportarGrafo(arvore, output_file);
+                }
+            } else {
+                cout << "Quantidade de vértices inválida! Insira 2 ou mais vértices." << endl;
+            }
+
             break;
         }
 
