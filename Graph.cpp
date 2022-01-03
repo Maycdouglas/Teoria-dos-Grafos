@@ -776,6 +776,15 @@ bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){
     return false;
 }
 
+string Graph::ordenacaoTopologica()
+{
+    return "xiao te amo";
+}
+
+void Graph::ordenacaoTopologicaAux()
+{
+
+}
 
 
 
