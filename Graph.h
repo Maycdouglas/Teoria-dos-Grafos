@@ -55,8 +55,8 @@ public:
     Graph* kruskal();
     bool estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo);
     Graph* prim();
-    string ordenacaoTopologica();
-    void ordenacaoTopologicaAux();
+    string ordenacaoTopologica(Graph *graph);
+    void ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack);
 
 private:
     //Auxiliar methods

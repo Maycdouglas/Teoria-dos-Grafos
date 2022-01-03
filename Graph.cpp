@@ -776,15 +776,55 @@ bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){
     return false;
 }
 
-string Graph::ordenacaoTopologica()
-{
+string Graph::ordenacaoTopologica(Graph *graph)
+{   
+     stack<int> Stack;
+    //setando todos os vértices para não visitados
+    bool* visited = new bool[V];
+    for (int i = 0; i < V; i++)
+        visited[i] = false;
+
+    //recursivamente classifica os vértices um por um
+    for (int i = 0; i < V; i++)
+        cout>>"to aqui">>endl;
+        if (visited[i] == false)
+            topologicalSortUtil(i, visited, Stack);
+
+    while (Stack.empty() == false) {
+        cout << Stack.top() << " ";
+        Stack.pop();
+    }
     return "xiao te amo";
 }
 
-void Graph::ordenacaoTopologicaAux()
+void Graph::ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack)
 {
+    int V = graph->getNumberEdges
+    adj = new list<int>[V];
+    // marcando o nó atual como visitado
+     visited[v] = true;
 
+    
+    // percorre os vértices adjacentes
+    list<int>::iterator i;
+    for (i = adj[v].begin(); i != adj[v].end(); ++i)
+        if (!visited[*i])
+            topologicalSortUtil(*i, visited, Stack);
+
+    
+    // empilha o vertice atual
+    Stack.push(v);
 }
 
-
-
+Graph* graph::prim()
+{
+     if (graph->getDirected()) {
+        cout << "Graph is directed" << endl;
+    } else {
+        if (!graph->getWeightedEdge()) {
+            cout << "Graph is not weighted" << endl;
+        } else {
+            graph->agmPrim(output_file);
+        }
+    }
+}
