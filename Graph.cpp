@@ -237,36 +237,38 @@ Node *Graph::getNodeByRotulo(int id)
 
 string Graph::buscaEmLargura(int id) {
 
-    //DEVE FUNCIONAR PARA OS GRAFOS E DIGRAFOS!!!
-
-    Node *noAtual = getNodeByRotulo(id); //aponta para o nó de acordo com o idRotulo recebido
+    Node *noAtual = getNodeByRotulo(id);
 
     //Clausula de segurança, para caso insira um ID inválido
     if(noAtual == nullptr){
-        cout << "Este ID nao existe no grafo!" << endl;
+        cout << "O no escolhido nao esta presente no grafo!" << endl;
         return "";
     }
 
-    Node *noAlvo; //cria um nó ponteiro auxiliar
-    Edge *arestaAtual, *arestaRetorno; //cria uma aresta e um aresta auxiliar
-    int idRotuloNoAtual, idRotuloNoAlvo; //variaveis para receber o id dos nodes
-    queue<int> filaVertices;  //cria uma fila de ID dos vertices
-    string grafo, arestaDOT; //cria as variaveis responsaveis pelo grafo na linguagem DOT
+    if(noAtual->getOutDegree() < 1) {
+        cout << "O no escolhido possui grau de saida igual a zero!" << endl;
+    }
+
+    Node *noAlvo;
+    Edge *arestaAtual, *arestaRetorno;
+    int idRotuloNoAtual, idRotuloNoAlvo;
+    queue<int> filaVertices;
+    string grafo, arestaDOT;
     bool retorno;
 
     montarCabecalhoGrafoDOT(&grafo,&arestaDOT); //monta o cabeçalho do grafo
 
-    filaVertices.push(noAtual->getId()); //insere o ID do no recebido na lista
+    filaVertices.push(noAtual->getId()); //insere na lista o ID do nó recebido
 
     noAtual->setMarcado(true); //marca o no inicial
 
     while(!filaVertices.empty()){ //loop responsável por percorrer os nós da fila de vertices
-        arestaAtual = noAtual->getFirstEdge(); //aponta para a primeira aresta no Nó Atual
+        arestaAtual = noAtual->getFirstEdge();
 
         while(arestaAtual != nullptr) {
-            noAlvo = getNode(arestaAtual->getTargetId()); //no auxiliar recebe o nó que a aresta atual aponta
-            idRotuloNoAtual= noAtual->getIdRotulo(); //recebe o id rotulo do nó atual
-            idRotuloNoAlvo= noAlvo->getIdRotulo(); //recebe o id rotulo do nó alvo atual
+            noAlvo = getNode(arestaAtual->getTargetId());
+            idRotuloNoAtual= noAtual->getIdRotulo();
+            idRotuloNoAlvo= noAlvo->getIdRotulo();
             retorno = false;
 
             if(!noAlvo->getMarcado()){  //verifica se o nó alvo não está está marcado
@@ -282,7 +284,7 @@ string Graph::buscaEmLargura(int id) {
                 }
                 filaVertices.push(noAlvo->getId()); //o no alvo é inserido na fila
             } else if(!(arestaAtual->getMarcado())){ //verifica se a aresta nao foi marcada
-                retorno = true;
+                retorno = true; //variavel responsavel por definir se a aresta em questao será de retorno
                 montarArestaGrafoDOT(&grafo,&arestaDOT,idRotuloNoAtual,idRotuloNoAlvo,arestaAtual->getWeight(), retorno);
 
                 //marca a aresta atual e a aresta de retorno
@@ -292,15 +294,25 @@ string Graph::buscaEmLargura(int id) {
                     arestaRetorno->setMarcado(true);
                 }
             }
-            arestaAtual = arestaAtual->getNextEdge(); //vai para a proxima aresta do no atual
+            arestaAtual = arestaAtual->getNextEdge();
         }
         filaVertices.pop(); //retira o primeiro elemento da fila
-        noAtual = getNode(filaVertices.front()); //aponta para o proximo nó da fila
+        noAtual = getNode(filaVertices.front());
+    }
+
+    //Desmarca todas as arestas e nós
+    noAtual = first_node;
+    while(noAtual != nullptr){
+        arestaAtual = noAtual->getFirstEdge();
+        noAtual->setMarcado(false);
+        while(arestaAtual != nullptr){
+            arestaAtual->setMarcado(false);
+            arestaAtual = arestaAtual->getNextEdge();
+        }
+        noAtual = noAtual->getNextNode();
     }
 
     grafo += "}";
-
-    cout << grafo << endl;
 
     return grafo;
 }
