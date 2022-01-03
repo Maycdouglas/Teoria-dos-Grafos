@@ -13,69 +13,47 @@
 using namespace std;
 
 void exportarGrafo(Graph* graph, ofstream& output_file) {
-    if(graph->getDirected() == false){
 
+    string grafo, arestaDOT;
 
-        output_file << "strict graph G {\n";
-        Node *noInicial = nullptr;
-        Node *noFinal = nullptr;
-
-        for(int m = 0; m < graph->getOrder(); m++)
-        {
-            Edge *aresta = graph->getNode(m + 1)->getFirstEdge();
-            while(aresta != nullptr)
-            {
-                if(!aresta->getRetorno())
-                {
-                    noInicial = graph->getNode(aresta->getOriginId());
-                    noFinal = graph->getNode(aresta->getTargetId());
-                    if(aresta->getVermelho() == false){
-                        output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
-                        output_file << " [weight = " << aresta->getWeight();
-                        output_file << ", label = " << aresta->getWeight() << "]\n";
-                    } else {
-                        output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
-                        output_file << " [weight = " << aresta->getWeight();
-                        output_file << ", label = " << aresta->getWeight();
-                        output_file << ", color=red]\n";
-                    }
-
-                }
-                aresta = aresta->getNextEdge();
-            }
-        }
-        output_file << "}";
-    } else {
-        output_file << "strict digraph G {\n";
-        Node *noInicial = nullptr;
-        Node *noFinal = nullptr;
-
-        for(int m = 0; m < graph->getOrder(); m++)
-        {
-            Edge *aresta = graph->getNode(m + 1)->getFirstEdge();
-            while(aresta != nullptr)
-            {
-                if(!aresta->getRetorno())
-                {
-                    noInicial = graph->getNode(aresta->getOriginId());
-                    noFinal = graph->getNode(aresta->getTargetId());
-                    if(aresta->getVermelho() == false){
-                        output_file << noInicial->getIdRotulo() << " -> " << noFinal->getIdRotulo();
-                        output_file << " [weight = " << aresta->getWeight();
-                        output_file << ", label = " << aresta->getWeight() << "]\n";
-                    } else {
-                        output_file << noInicial->getIdRotulo() << " -- " << noFinal->getIdRotulo();
-                        output_file << " [weight = " << aresta->getWeight();
-                        output_file << ", label = " << aresta->getWeight();
-                        output_file << ", color=red]\n";
-                    }
-
-                }
-                aresta = aresta->getNextEdge();
-            }
-        }
-        output_file << "}";
+    if(graph->getDirected()) //verifica se o grafo é direcionado
+    {
+        grafo = "strict digraph G {\n";
+        arestaDOT = " -> ";
     }
+    else {
+        grafo = "strict graph G {\n";
+        arestaDOT = " -- ";
+    }
+
+    Node *noAtual = graph->getFirstNode();
+    Edge *arestaAtual;
+
+    while(noAtual != nullptr){
+        arestaAtual = noAtual->getFirstEdge();
+        while (arestaAtual != nullptr) {
+            grafo += "\t" + to_string(noAtual->getIdRotulo()) + arestaDOT + to_string(arestaAtual->getTargetIdRotulo());
+            if(graph->getWeightedEdge()){
+                grafo += " [weight = " + to_string(arestaAtual->getWeight());
+                grafo += ", label = " + to_string(arestaAtual->getWeight());
+                if (arestaAtual->getVermelho()) {
+                    grafo += ", color = red";
+                }
+            } else{
+                if (arestaAtual->getVermelho()) {
+                    grafo += " [color = red";
+                }
+            }
+            grafo += "]\n";
+            arestaAtual = arestaAtual->getNextEdge();
+        }
+        noAtual = noAtual->getNextNode();
+    }
+
+    grafo += "}";
+
+    output_file << grafo;
+
 }
 
 Graph* leituraInstancia(ifstream& input_file, int directed, int weightedEdge, int weightedNode){
@@ -95,9 +73,16 @@ Graph* leituraInstancia(ifstream& input_file, int directed, int weightedEdge, in
 
 
     //Leitura de arquivo
-    while(input_file >> idNodeSource >> idNodeTarget >> pesoAresta) {
-        graph->insertEdge(idNodeSource, idNodeTarget, pesoAresta);
+    if(weightedEdge){
+        while(input_file >> idNodeSource >> idNodeTarget >> pesoAresta) {
+            graph->insertEdge(idNodeSource, idNodeTarget, pesoAresta);
+        }
+    } else{
+        while(input_file >> idNodeSource >> idNodeTarget >> pesoAresta) {
+            graph->insertEdge(idNodeSource, idNodeTarget, 0);
+        }
     }
+
 
     return graph;
 }

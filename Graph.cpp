@@ -668,7 +668,7 @@ string Graph::gerarCaminhoMinimo(float *vetorCustos, Node **vetorPais, Node *noI
 int Graph::extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVerticesDisponiveis){
 
     int idMenorCusto = 0;
-    int menorCusto = INFINITY;
+    float menorCusto = INFINITY;
 
     cout << "Chegou aqui 50" << endl;
 
@@ -717,6 +717,12 @@ string Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
     int linha, coluna, idInicial = noInicial->getId(), idFinal = noFinal->getId();
     list <int> caminho;
     list<int>::iterator it;
+
+    //Clausula de segurança para grafos que não possuem peso nas arestas
+    if(!this->getWeightedEdge()){
+        cout << "O grafo precisa ter peso nas arestas!" << endl;
+        return "";
+    }
 
     //Clausula de segurança para nós que não existem no grafo
     if(noInicial == nullptr || noFinal == nullptr){
