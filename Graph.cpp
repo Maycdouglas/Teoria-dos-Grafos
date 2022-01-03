@@ -824,13 +824,47 @@ void Graph::ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack)
 
 Graph* graph::prim()
 {
-     if (graph->getDirected()) {
-        cout << "Graph is directed" << endl;
-    } else {
-        if (!graph->getWeightedEdge()) {
-            cout << "Graph is not weighted" << endl;
-        } else {
-            graph->agmPrim(output_file);
-        }
+    if (!this->weighted_edge && this->directed){
+        cout << "ERRO: grafo direcionado e/ou arestas sem peso" << endl;
+        return nullptr;
     }
+    
+    Graph *arvore = new Graph(0,this->directed,this->weighted_edge,this->weighted_node);
+    vector<int> visitados;
+    visitados.push_back(this->first_node->getId();
+
+    while (visitados.size() != this->order){
+        int idEdgeMinS;
+        int idEdgeMinT;
+        float pesoMin = INFINITY;
+
+        for (int i = 0; i < visitados.size(); i++){
+            Node *aux = this->getNode(visitados[i]);
+            Edge *aresta = aux->getFirstEdge();
+            while (aresta != nullptr){
+                bool visit = false;
+                if (aresta->getWeight() < pesoMin){
+                    for (int j = 0; j < visitados.size(); j++){
+                        if (aresta->getTargetId() == visitados[j]){
+                            visit = true;
+                            break;
+                        }
+                    }
+                    if (!visit){
+                        idEdgeMinS = aux->getId();
+                        idEdgeMinT = aresta->getTargetId();
+                        pesoMin = aresta->getWeight();
+                    }
+                }
+
+                aresta = aresta->getNextEdge();
+            }
+        }
+        arvore->insertEdge(idEdgeMinS, idEdgeMinT, pesoMin);
+        visitados.push_back(idEdgeMinT);
+    }
+
+    cout << "ORDEM DA ARVORE: " << arvore->getOrder() << endl;
+    cout << "NUMERO DE ARESTAS DA ARVORE: " << arvore->getNumberEdges() << endl;
+    return arvore;
 }
