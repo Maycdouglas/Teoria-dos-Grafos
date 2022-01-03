@@ -778,6 +778,11 @@ bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){
 
 string Graph::ordenacaoTopologica(Graph *graph)
 {   
+    if(!graph->getDirected)
+    {
+        return "ERRO: Grafo não direcionado";
+        break;
+    }
      stack<int> Stack;
     //setando todos os vértices para não visitados
     bool* visited = new bool[V];
@@ -788,7 +793,7 @@ string Graph::ordenacaoTopologica(Graph *graph)
     for (int i = 0; i < V; i++)
         cout>>"to aqui">>endl;
         if (visited[i] == false)
-            topologicalSortUtil(i, visited, Stack);
+            ordenacaoTopologicaAux(i, visited, Stack);
 
     while (Stack.empty() == false) {
         cout << Stack.top() << " ";
@@ -799,6 +804,7 @@ string Graph::ordenacaoTopologica(Graph *graph)
 
 void Graph::ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack)
 {
+    //variável com total de vértices e seus adjacentes listados
     int V = graph->getNumberEdges
     adj = new list<int>[V];
     // marcando o nó atual como visitado
@@ -809,7 +815,7 @@ void Graph::ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack)
     list<int>::iterator i;
     for (i = adj[v].begin(); i != adj[v].end(); ++i)
         if (!visited[*i])
-            topologicalSortUtil(*i, visited, Stack);
+            ordenacaoTopologicaAux(*i, visited, Stack);
 
     
     // empilha o vertice atual
