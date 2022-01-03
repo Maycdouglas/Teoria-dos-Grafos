@@ -40,7 +40,7 @@ public:
     void setMarcado(bool marcado);
     // Other methods
     bool searchEdge(int target_id);
-    void insertEdge(int target_id, float weight, int origin_id, bool retorno);
+    void insertEdge(int target_id, float weight, int origin_id, bool retorno, int target_id_rotulo, int origin_id_rotulo);
     void removeAllEdges();
     int removeEdge(int id, bool directed, Node* target_node);
     void incrementOutDegree();

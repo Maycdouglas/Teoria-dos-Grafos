@@ -129,7 +129,7 @@ void Graph::insertEdge(int id_rotulo, int target_id_rotulo, float weight)
     int id = noInicial->getId(); //recebe o id do nó inicial
     int target_id = noFinal->getId(); //recebe o id do nó final
 
-    noInicial->insertEdge(target_id, weight, id, false); //insere a aresta a partir do nó inicial
+    noInicial->insertEdge(target_id, weight, id, false, target_id_rotulo, id_rotulo); //insere a aresta a partir do nó inicial
 
     if(directed) //verifica se é um digrafo
     {
@@ -140,7 +140,7 @@ void Graph::insertEdge(int id_rotulo, int target_id_rotulo, float weight)
     {
         // uma aresta auxiliar é adicionada entre os dois nós para o percurso inverso ser possível
 //        Node *noAux = getNode(target_id);
-        noFinal->insertEdge(id, weight, target_id, true);
+        noFinal->insertEdge(id, weight, target_id, true, target_id_rotulo, id_rotulo);
 
         getNode(id)->incrementOutDegree();
         getNode(id)->incrementInDegree();
@@ -903,22 +903,29 @@ Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
     int idOrigem, idAlvo, idOrigemRotulo, idAlvoRotulo;
 
     while(!filaArestas.empty()) {
-        idOrigem = filaArestas.front()->getOriginId();
-        idAlvo = filaArestas.front()->getTargetId();
+        idOrigemRotulo = filaArestas.front()->getOriginIdRotulo();
+        idOrigem = arvore->getNodeByRotulo(idOrigemRotulo)->getId();
+        idAlvoRotulo = filaArestas.front()->getTargetIdRotulo();
+        idAlvo = arvore->getNodeByRotulo(idAlvoRotulo)->getId();
         cout << "idOrigem = " << idOrigem << " idAlvo = " << idAlvo << endl;
         if(!estaNaMesmaSubarvore(vertices, idOrigem, idAlvo)){
+            cout << "HERE 1" << endl;
             idOrigemRotulo = arvore->getNode(idOrigem)->getIdRotulo();
+            cout << "HERE 1.1" << endl;
             idAlvoRotulo = arvore->getNode(idAlvo)->getIdRotulo();
+            cout << "HERE 1.2" << endl;
 
             arvore->insertEdge(idOrigemRotulo,idAlvoRotulo,filaArestas.front()->getWeight());
-
+            cout << "HERE 2" << endl;
             if(vertices[idOrigem - 1] <= vertices[idAlvo - 1]){
+                cout << "HERE 3" << endl;
                 for(int i = 0; i < arvore->getOrder(); i++){
                     if(vertices[i] == vertices[idAlvo - 1]){
                         vertices[i] = vertices[idOrigem - 1];
                     }
                 }
             } else {
+                cout << "HERE 4" << endl;
                 for(int i = 0; i < arvore->getOrder(); i++){
                     if(vertices[i] == vertices[idOrigem - 1]){
                         vertices[i] = vertices[idAlvo - 1];
@@ -926,6 +933,7 @@ Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
                 }
             }
         }
+        cout << "HERE 5" << endl;
         cout << "======" << endl;
         cout << "IMPRIMINDO VETOR: " << endl;
         for(int i = 0; i < arvore->getOrder(); i++){

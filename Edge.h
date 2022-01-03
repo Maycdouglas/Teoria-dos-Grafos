@@ -8,7 +8,9 @@ class Edge{
     // Attributes
 private:
     int target_id;
+    int target_id_rotulo;
     int origin_id;
+    int origin_id_rotulo;
     Edge* next_edge; // lista de arestas do nó origin_id
     float weight;
     bool retorno;
@@ -18,14 +20,16 @@ private:
 
 public:
     // Constructor
-    Edge(int target_id, int origin_id);
+    Edge(int target_id, int origin_id, int target_id_rotulo, int origin_id_rotulo);
     // Destructor
     ~Edge();
     // Getters
     int getTargetId();
+    int getTargetIdRotulo();
     Edge* getNextEdge();
     float getWeight();
     int getOriginId();
+    int getOriginIdRotulo();
     bool getRetorno();
     bool getVermelho();
     bool getMarcado();

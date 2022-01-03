@@ -107,11 +107,11 @@ void Node::setMarcado(bool marcado) {
 }
 
 // Other methods
-void Node::insertEdge(int target_id, float weight, int origin_id, bool retorno){
+void Node::insertEdge(int target_id, float weight, int origin_id, bool retorno, int target_id_rotulo, int origin_id_rotulo){
     // Verifies whether there are at least one edge in the node
     if(this->first_edge != nullptr){
         // Allocating the new edge and keeping the integrity of the edge list
-        Edge* edge = new Edge(target_id, origin_id);
+        Edge* edge = new Edge(target_id, origin_id, target_id_rotulo, origin_id_rotulo);
         edge->setWeight(weight);
         edge->setRetorno(retorno);
         this->last_edge->setNextEdge(edge);
@@ -120,7 +120,7 @@ void Node::insertEdge(int target_id, float weight, int origin_id, bool retorno){
     }
     else{
         // Allocating the new edge and keeping the integrity of the edge list
-        this->first_edge = new Edge(target_id, origin_id);
+        this->first_edge = new Edge(target_id, origin_id, target_id_rotulo, origin_id_rotulo);
         this->first_edge->setWeight(weight);
         this->first_edge->setRetorno(retorno);
         this->last_edge = this->first_edge;

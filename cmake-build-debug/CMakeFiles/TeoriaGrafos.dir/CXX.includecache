@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Edge.cpp
+Edge.h
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Edge.h
+iostream
+-
+
 C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Edge.h
 
 C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Graph.cpp
@@ -50,7 +56,39 @@ list
 queue
 -
 
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Node.cpp
+Node.h
 C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Node.h
 Edge.h
 C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Edge.h
+iostream
+-
+
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Node.h
+Edge.h
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Edge.h
+
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/main.cpp
+iostream
+-
+fstream
+-
+string
+-
+cmath
+-
+utility
+-
+tuple
+-
+iomanip
+-
+cstdlib
+-
+chrono
+-
+Graph.h
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Graph.h
+Node.h
+C:/Users/Maycon Douglas/CLionProjects/TeoriaGrafos/Node.h
 

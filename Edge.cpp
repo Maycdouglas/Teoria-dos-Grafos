@@ -8,10 +8,12 @@ using namespace std;
 **************************************************************************************************/
 
 // Constructor
-Edge::Edge(int target_id, int origin_id){
+Edge::Edge(int target_id, int origin_id, int target_id_rotulo, int origin_id_rotulo){
 
     this->target_id = target_id;
+    this->target_id_rotulo = target_id_rotulo;
     this->origin_id = origin_id;
+    this->origin_id_rotulo = origin_id_rotulo;
     this->next_edge = nullptr;
     this->weight = 0;
     this->retorno = false;
@@ -37,6 +39,12 @@ int Edge::getTargetId(){
 
 }
 
+int Edge::getTargetIdRotulo(){
+
+    return this->target_id_rotulo;
+
+}
+
 Edge* Edge::getNextEdge(){
 
     return this->next_edge;
@@ -51,6 +59,10 @@ float Edge::getWeight(){
 
 int Edge::getOriginId() {
     return this->origin_id;
+}
+
+int Edge::getOriginIdRotulo() {
+    return this->origin_id_rotulo;
 }
 
 bool Edge::getRetorno() {
