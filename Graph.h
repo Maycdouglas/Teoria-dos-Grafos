@@ -58,7 +58,7 @@ public:
     void retirarElementoLista(list<int> *listaVerticesDisponiveis, int verticeMenorCaminhoAtual);
     string floyd(int idRotuloInicial, int idRotuloFinal );
     string gerarCaminhoMinimoFloyd(list<int> *caminho, float *matrizVertices);
-    Graph* kruskal();
+    Graph* kruskal(int *subconjuntoVertices, int qntdVertices);
     bool estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo);
     void montarCabecalhoGrafoDOT(string *grafo, string *arestaDOT);
     void montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloNoAtual, int idRotuloNoAlvo, float pesoAresta, bool retorno);

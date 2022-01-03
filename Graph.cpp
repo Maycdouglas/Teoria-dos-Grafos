@@ -890,31 +890,42 @@ string Graph::gerarCaminhoMinimoFloyd(list<int> *caminho, float *matrizVertices)
     return grafo;
 }
 
-Graph* Graph::kruskal(){
+Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
 
     Graph *arvore = new Graph(0,this->directed,this->weighted_edge,this->weighted_node);
     int idRotulo;
+    Node *noAtual;
 
-    for(int i = 0; i < this->order; i++) {
-        idRotulo = getNode(i + 1)->getIdRotulo();
-        arvore->insertNode(idRotulo,0);
+    for(int i = 0; i < qntdVertices; i++){
+        noAtual = getNodeByRotulo(subconjuntoVertices[i]);
+        if(noAtual != nullptr){
+            arvore->insertNode(noAtual->getIdRotulo(),0);
+        } else {
+            cout << "Um dos vertices escolhidos nao esta presente no grafo!" << endl;
+            return nullptr;
+        }
     }
-    for(int i = 0; i < this->order; i++) {
+
+//    for(int i = 0; i < this->order; i++) {
+//        idRotulo = getNode(i + 1)->getIdRotulo();
+//        arvore->insertNode(idRotulo,0);
+//    }
+    for(int i = 0; i < qntdVertices; i++) {
         cout << arvore->getNode(i+1)->getIdRotulo() << " ";
     }
 
     cout << endl;
 
     queue<Edge*> filaArestas, filaArestasAux;
-    Node *no = this->first_node;
+    noAtual = arvore->getFirstNode();
     Edge *aresta;
     bool encontrouPosicao;
 
-    while(no != nullptr){
+    while(noAtual != nullptr){
         cout << "=======" << endl;
-        cout << "Estou no Noh " << no->getIdRotulo() << endl;
+        cout << "Estou no Noh " << noAtual->getIdRotulo() << endl;
         cout << "-------" << endl;
-        aresta = no->getFirstEdge();
+        aresta = noAtual->getFirstEdge();
         while(aresta != nullptr){
             cout << "Estou na Aresta com alvo " << getNode(aresta->getTargetId())->getIdRotulo() << endl;
             encontrouPosicao = false;
@@ -957,7 +968,7 @@ Graph* Graph::kruskal(){
             }
             aresta = aresta->getNextEdge();
         }
-        no = no->getNextNode();
+        noAtual = noAtual->getNextNode();
     }
 
     cout << "Tamanho da fila principal: " << filaArestas.size() << endl;
