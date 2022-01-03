@@ -114,6 +114,7 @@ int menu(){
     cout << "[4] Dijkstra" << endl;
     cout << "[5] Floyd" << endl;
     cout << "[6] Kruskal" << endl;
+    cout << "[10] Prim" << endl;
     cout << "[0] Sair" << endl;
 
     cin >> selecao;
@@ -174,6 +175,12 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
 
         case 6:{
             exportarGrafo(graph->kruskal(), output_file);
+//            string teste = graph->kruskal();
+            break;
+        }
+
+        case 10:{
+            exportarGrafo(graph->prim(), output_file);
 //            string teste = graph->kruskal();
             break;
         }

@@ -776,53 +776,53 @@ bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){
     return false;
 }
 
-string Graph::ordenacaoTopologica(Graph *graph)
-{   
-    if(!graph->getDirected)
-    {
-        return "ERRO: Grafo não direcionado";
-        break;
-    }
-     stack<int> Stack;
-    //setando todos os vértices para não visitados
-    bool* visited = new bool[V];
-    for (int i = 0; i < V; i++)
-        visited[i] = false;
+//string Graph::ordenacaoTopologica(Graph *graph)
+//{
+//    if(!graph->getDirected)
+//    {
+//        return "ERRO: Grafo não direcionado";
+//        break;
+//    }
+//     stack<int> Stack;
+//    //setando todos os vértices para não visitados
+//    bool* visited = new bool[V];
+//    for (int i = 0; i < V; i++)
+//        visited[i] = false;
+//
+//    //recursivamente classifica os vértices um por um
+//    for (int i = 0; i < V; i++)
+//        cout>>"to aqui">>endl;
+//        if (visited[i] == false)
+//            ordenacaoTopologicaAux(i, visited, Stack);
+//
+//    while (Stack.empty() == false) {
+//        cout << Stack.top() << " ";
+//        Stack.pop();
+//    }
+//    return "xiao te amo";
+//}
 
-    //recursivamente classifica os vértices um por um
-    for (int i = 0; i < V; i++)
-        cout>>"to aqui">>endl;
-        if (visited[i] == false)
-            ordenacaoTopologicaAux(i, visited, Stack);
+//void Graph::ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack)
+//{
+//    //variável com total de vértices e seus adjacentes listados
+//    int V = graph->getNumberEdges
+//    adj = new list<int>[V];
+//    // marcando o nó atual como visitado
+//     visited[v] = true;
+//
+//
+//    // percorre os vértices adjacentes
+//    list<int>::iterator i;
+//    for (i = adj[v].begin(); i != adj[v].end(); ++i)
+//        if (!visited[*i])
+//            ordenacaoTopologicaAux(*i, visited, Stack);
+//
+//
+//    // empilha o vertice atual
+//    Stack.push(v);
+//}
 
-    while (Stack.empty() == false) {
-        cout << Stack.top() << " ";
-        Stack.pop();
-    }
-    return "xiao te amo";
-}
-
-void Graph::ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack)
-{
-    //variável com total de vértices e seus adjacentes listados
-    int V = graph->getNumberEdges
-    adj = new list<int>[V];
-    // marcando o nó atual como visitado
-     visited[v] = true;
-
-    
-    // percorre os vértices adjacentes
-    list<int>::iterator i;
-    for (i = adj[v].begin(); i != adj[v].end(); ++i)
-        if (!visited[*i])
-            ordenacaoTopologicaAux(*i, visited, Stack);
-
-    
-    // empilha o vertice atual
-    Stack.push(v);
-}
-
-Graph* graph::prim()
+Graph* Graph::prim()
 {
     if (!this->weighted_edge && this->directed){
         cout << "ERRO: grafo direcionado e/ou arestas sem peso" << endl;
@@ -831,12 +831,12 @@ Graph* graph::prim()
     
     Graph *arvore = new Graph(0,this->directed,this->weighted_edge,this->weighted_node);
     vector<int> visitados;
-    visitados.push_back(this->first_node->getId();
+    visitados.push_back(this->first_node->getId());
 
     while (visitados.size() != this->order){
         int idEdgeMinS;
         int idEdgeMinT;
-        float pesoMin = INFINITY;
+        float pesoMin = INFINITO;
 
         for (int i = 0; i < visitados.size(); i++){
             Node *aux = this->getNode(visitados[i]);
@@ -860,7 +860,7 @@ Graph* graph::prim()
                 aresta = aresta->getNextEdge();
             }
         }
-        arvore->insertEdge(idEdgeMinS, idEdgeMinT, pesoMin);
+        arvore->insertEdge(getNode(idEdgeMinS)->getIdRotulo(), getNode(idEdgeMinT)->getIdRotulo(), pesoMin);
         visitados.push_back(idEdgeMinT);
     }
 
