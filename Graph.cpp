@@ -776,27 +776,27 @@ bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){
     return false;
 }
 
-string Graph::ordenacaoTopologica(Graph *graph)
+string Graph::ordenacaoTopologica()
 {   
-    if(!graph->getDirected)
+    if(!this->directed)
     {
         return "ERRO: Grafo não direcionado";
-        break;
     }
      stack<int> Stack;
     //setando todos os vértices para não visitados
-    bool* visited = new bool[V];
-    for (int i = 0; i < V; i++)
+    bool* visited = new bool[this->order];
+    for (int i = 0; i < this->order; i++)
         visited[i] = false;
 
     //recursivamente classifica os vértices um por um
-    for (int i = 0; i < V; i++)
-        cout>>"to aqui">>endl;
-        if (visited[i] == false)
+    for (int i = 0; i < this->order; i++){
+        cout << "to aqui" << endl;
+        if (!visited[i])
             ordenacaoTopologicaAux(i, visited, Stack);
+    }
 
-    while (Stack.empty() == false) {
-        cout << Stack.top() << " ";
+    while (!Stack.empty()) {
+        cout << getNode(Stack.top() + 1)->getIdRotulo() << " ";
         Stack.pop();
     }
     return "xiao te amo";
@@ -805,15 +805,15 @@ string Graph::ordenacaoTopologica(Graph *graph)
 void Graph::ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack)
 {
     //variável com total de vértices e seus adjacentes listados
-    int V = graph->getNumberEdges
-    adj = new list<int>[V];
+    int V = this->number_edges;
+    list<int> adj;
     // marcando o nó atual como visitado
      visited[v] = true;
 
     
     // percorre os vértices adjacentes
     list<int>::iterator i;
-    for (i = adj[v].begin(); i != adj[v].end(); ++i)
+    for (i = adj.begin(); i != adj.end(); ++i)
         if (!visited[*i])
             ordenacaoTopologicaAux(*i, visited, Stack);
 
@@ -822,15 +822,15 @@ void Graph::ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack)
     Stack.push(v);
 }
 
-Graph* graph::prim()
-{
-     if (graph->getDirected()) {
-        cout << "Graph is directed" << endl;
-    } else {
-        if (!graph->getWeightedEdge()) {
-            cout << "Graph is not weighted" << endl;
-        } else {
-            graph->agmPrim(output_file);
-        }
-    }
-}
+//Graph* graph::prim()
+//{
+//     if (graph->getDirected()) {
+//        cout << "Graph is directed" << endl;
+//    } else {
+//        if (!graph->getWeightedEdge()) {
+//            cout << "Graph is not weighted" << endl;
+//        } else {
+//            graph->agmPrim(output_file);
+//        }
+//    }
+//}
