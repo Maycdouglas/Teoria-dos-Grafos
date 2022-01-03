@@ -111,9 +111,10 @@ int menu(){
     cout << "[1] Gerar grafo" << endl;
     cout << "[2] Busca em Largura" << endl;
     cout << "[3] Fecho Transitivo Direto" << endl;
-    cout << "[4] Dijkstra" << endl;
-    cout << "[5] Floyd" << endl;
-    cout << "[6] Kruskal" << endl;
+    cout << "[4] Fecho Transitivo Indireto" << endl;
+    cout << "[5] Dijkstra" << endl;
+    cout << "[6] Floyd" << endl;
+    cout << "[7] Kruskal" << endl;
     cout << "[0] Sair" << endl;
 
     cin >> selecao;
@@ -167,8 +168,17 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
             break;
         }
 
-            //Algoritmo Guloso Randomizado Reativo
+            //Fecho Transitivo Indireto
         case 4:{
+            int idRotulo;
+            cout << "Insira o ID do Noh: ";
+            cin >> idRotulo;
+            output_file << graph->fechoTransitivoIndireto(idRotulo);
+            break;
+        }
+
+            //Algoritmo Guloso Randomizado Reativo
+        case 5:{
             int idRotuloInicial, idRotuloFinal;
             cout << "Insira o ID do Noh Inicial: ";
             cin >> idRotuloInicial;
@@ -178,7 +188,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
             break;
         }
 
-        case 5:{
+        case 6:{
             int idRotuloInicial, idRotuloFinal;
             cout << "Insira o ID do Noh Inicial: ";
             cin >> idRotuloInicial;
@@ -188,7 +198,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
             break;
         }
 
-        case 6:{
+        case 7:{
 
             int subconjuntoVertices[graph->getOrder()];
             int qntdVertices;

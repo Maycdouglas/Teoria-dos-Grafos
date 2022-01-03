@@ -399,7 +399,7 @@ void Graph::gerarSubgrafoVerticeInduzido(string *grafo, string *arestaDOT, int i
                     idRotuloNoAlvo = noAlvo->getIdRotulo();
                     idNoAlvo = noAlvo->getId();
 
-                    if(visitou(idNoAlvo, verticesVisitados)) {
+                    if(visitou(idNoAlvo, verticesVisitados) && idRotuloNoAlvo != idRotuloNoOrigem) {
                         montarArestaGrafoDOT(grafo,arestaDOT,idRotuloNoAtual,idRotuloNoAlvo,arestaAtual->getWeight(),false);
                     }
                     arestaAtual = arestaAtual->getNextEdge();
@@ -420,117 +420,81 @@ bool Graph::visitou(int id, bool *verticesVisitados) {
 
 string Graph::fechoTransitivoIndireto(int idRotulo) {
 
-
-
-    return "maycon";
-
-}
-
-void Graph::fechoTransitivoIndiretoAux(int id, bool *visitados) {
-
-    Node *no = getNode(id);
-    Edge *aresta= no->getFirstEdge();
-
-    visitados[id - 1] = 1;
-
-    while(aresta != nullptr) {
-
-        if( (visitados[aresta->getTargetId() - 1] == 0) ){
-            fechoTransitivoDiretoAux(aresta->getTargetId(), visitados);
-        }
-
-        aresta = aresta->getNextEdge();
+//Clausula de segurança, para caso o grafo nao seja direcionado
+    if(!this->directed){
+        cout << "Este grafo nao eh direcionado!" << endl;
+        return "";
     }
 
-}
-
-string Graph::dijkstra2(int idRotuloInicial, int idRotuloFinal) {
-
-    //AINDA NAO FUNCIONA PARA DIGRAFOS!!!
-
-    float vetorPesos[this->order], menorCaminhoAux, menorCaminho = 0;
-    int verticeMenorCaminhoAtual, verticeMenorCaminhoAux, idInicial = getNodeByRotulo(idRotuloInicial)->getId(), idNoFinal = getNodeByRotulo(idRotuloFinal)->getId();
-    bool atualizouMenorCaminho;
-    Node *vetorPais[this->order], *noAlvo, *noInicial = getNodeByRotulo(idRotuloInicial), *noAtual = noInicial->getNextNode();
-    Edge *arestaAtual = noInicial->getFirstEdge();
-    list<int> listaVerticesDisponiveis;
-
-    vetorPesos[ noInicial->getId() - 1 ] = 0;
-    vetorPais[ noInicial->getId() - 1 ] = nullptr;
-
-    //Insere nós na lista de vertices disponiveis e seta o vetor de pesos com o valor INFINITO
-    while(noAtual != nullptr) {
-        listaVerticesDisponiveis.push_back(noAtual->getId());
-        vetorPesos[noAtual->getId() - 1] = INFINITO;
-        vetorPais[noAtual->getId() - 1] = nullptr;
-        noAtual = noAtual->getNextNode();
+    //Clausula de segurança, para caso insira um ID inválido
+    if(getNodeByRotulo(idRotulo) == nullptr){
+        cout << "Este ID nao existe no grafo!" << endl;
+        return "";
     }
 
-    verticeMenorCaminhoAtual = noInicial->getId();
-    Edge *arestaAux = nullptr;
-    //Percorre os vertices da lista
-    while( !(listaVerticesDisponiveis.empty()) ){
+    string grafo, arestaDOT;
+    montarCabecalhoGrafoDOT(&grafo,&arestaDOT);
 
-        noAtual = getNode(verticeMenorCaminhoAtual);
-        arestaAtual = noAtual->getFirstEdge();
-        menorCaminhoAux = INFINITO;
+    bool verticesVisitados[this->order];
+    list<int> fechoTransitivoIndireto;
+    list<int> caminho;
 
-        cout << "CHEGOU AQUI 1" << endl;
-
-        //Percorre as aresta do nó
-        while(arestaAtual != nullptr) {
-            atualizouMenorCaminho = false;
-            noAlvo = getNode(arestaAtual->getTargetId());
-            if(estaNaLista(noAlvo->getId(),&listaVerticesDisponiveis)){ //verifica se o no alvo está na lista de vertices disponiveis
-                if(vetorPesos[noAlvo->getId() - 1] > arestaAtual->getWeight() + menorCaminho) //verifica se o peso atual do vertice alvo é maior que o peso novo
-                {
-                    cout << "CHEGOU AQUI 2" << endl;
-                    vetorPesos[noAlvo->getId() - 1] = arestaAtual->getWeight() + menorCaminho;
-                    vetorPais[noAlvo->getId() - 1] = noAtual;
-                    if(vetorPesos[noAlvo->getId() - 1] < menorCaminhoAux) { //verifica se o peso da aresta é menor que o atual menor
-                        cout << "CHEGOU AQUI 3" << endl;
-                        arestaAux = arestaAtual;
-                        menorCaminhoAux = vetorPesos[noAlvo->getId() - 1];
-                        verticeMenorCaminhoAux = noAlvo->getId();
-                        atualizouMenorCaminho = true;
-                    }
-                }
-            }
-            cout << "CHEGOU AQUI 4" << endl;
-            arestaAtual = arestaAtual->getNextEdge();
-        }
-        if(noAtual->getOutDegree() != 0){
-            cout << "CHEGOU AQUI 5" << endl;
-            if(!atualizouMenorCaminho) //se o menor vertice nao foi atualizado, o proximo vertice recebe o primeiro da lista
-            {
-                cout << "CHEGOU AQUI 6" << endl;
-                verticeMenorCaminhoAux = listaVerticesDisponiveis.front();
-            }
-            cout << "CHEGOU AQUI 7" << endl;
-            verticeMenorCaminhoAtual = verticeMenorCaminhoAux;
-            menorCaminho = menorCaminhoAux;
-            //Percorre a lista de vertices
-            cout << "CHEGOU AQUI 8" << endl;
-            retirarElementoLista(&listaVerticesDisponiveis,verticeMenorCaminhoAtual);
-            cout << "CHEGOU AQUI 9" << endl;
-        } else{
-            verticeMenorCaminhoAtual = arestaAux->getOriginId();
-        }
-
+    for(int i = 0; i < this->order; i++){ //seta todos os elementos do array com 0
+        verticesVisitados[i] = false;
     }
 
-    cout << "======<3" << endl;
-    //Imprime vetor de pesos para conferir
     for(int i = 0; i < this->order; i++){
-        cout<< vetorPesos[i] << endl;
-        if(vetorPais[i] != nullptr){
-            cout << vetorPais[i]->getIdRotulo() << endl;
-        } else{
-            cout << "Pai nulo" << endl;
-        }
+        fechoTransitivoIndiretoAux(i + 1, getNodeByRotulo(idRotulo)->getId(), verticesVisitados, &fechoTransitivoIndireto, &caminho); //inicia busca em profundidade
     }
 
-    return "maycon";
+    cout << "Tamanho da lista fecho: " << fechoTransitivoIndireto.size() << endl;
+
+    cout << "Tamanho da lista caminho: " << caminho.size() << endl;
+
+    for(list<int>::iterator it = fechoTransitivoIndireto.begin(); it!=fechoTransitivoIndireto.end();it++){
+        cout << *it << " ";
+    }
+
+    cout << endl;
+
+    for(list<int>::iterator it = caminho.begin(); it!=caminho.end();it++){
+        cout << *it << " ";
+    }
+
+    cout << endl;
+    //gerarSubgrafoVerticeInduzido(&grafo,&arestaDOT,idRotulo,verticesVisitados);
+
+    cout << grafo << endl;
+
+    return grafo;
+
+}
+
+void Graph::fechoTransitivoIndiretoAux(int idNoOrigem, int idNoAlvo, bool *verticesVisitados, list<int> *fechoTransitivoIndireto, list<int> *caminho) {
+
+    Node *noAtual = getNode(idNoOrigem);
+    Edge *arestaAtual = noAtual->getFirstEdge();
+
+    verticesVisitados[idNoOrigem - 1] = true;
+
+    caminho->push_back(idNoOrigem);
+
+    while(arestaAtual != nullptr) {
+
+        if(arestaAtual->getTargetId() == idNoAlvo){
+            fechoTransitivoIndireto->splice(fechoTransitivoIndireto->end(),*caminho);
+            break;
+        }
+
+        if(!verticesVisitados[arestaAtual->getTargetId() - 1]){
+            fechoTransitivoDiretoAux(arestaAtual->getTargetId(), verticesVisitados);
+        }
+
+        arestaAtual = arestaAtual->getNextEdge();
+    }
+
+    caminho->clear();
+
 }
 
 string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
@@ -907,10 +871,6 @@ Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
         }
     }
 
-//    for(int i = 0; i < this->order; i++) {
-//        idRotulo = getNode(i + 1)->getIdRotulo();
-//        arvore->insertNode(idRotulo,0);
-//    }
     for(int i = 0; i < qntdVertices; i++) {
         cout << arvore->getNode(i+1)->getIdRotulo() << " ";
     }
@@ -920,67 +880,6 @@ Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
     queue<Edge*> filaArestas, filaArestasAux;
 
     ordenarArestasOrdemCrescente(arvore,&filaArestas,&filaArestasAux);
-
-//    noAtual = this->first_node;
-//    Edge *arestaAtual;
-//    bool encontrouPosicao;
-//
-//    //PRECISO VERIFICAR SE O NOATUAL ESTA NA ARVORE E SE O ALVO DA ARESTA ATUAL TAMBEM ESTA NA ARVORE. USAREI O IDROTULO PARA A VERIFICACAO
-//
-//    //loop responsavel por percorrer cada no do grafo e ordenar a lista de arestas
-//    while(noAtual != nullptr){
-//        cout << "=======" << endl;
-//        cout << "Estou no Noh " << noAtual->getIdRotulo() << endl;
-//        cout << "-------" << endl;
-//        if (arvore->getNodeByRotulo(noAtual->getIdRotulo()) != nullptr){
-//            arestaAtual = noAtual->getFirstEdge();
-//            while(arestaAtual != nullptr){
-//                cout << "Estou na Aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
-//                if(arvore->getNodeByRotulo(getNode(arestaAtual->getTargetId())->getIdRotulo()) != nullptr){
-//                    encontrouPosicao = false;
-//                    if(!arestaAtual->getRetorno()){
-//                        if (filaArestas.empty() && filaArestasAux.empty()){ //verifica se as duas filas estao vazias
-//                            filaArestas.push(arestaAtual);
-//                        } else if(filaArestasAux.empty()) { //verifica se a fila auxiliar esta vazia
-//                            if(filaArestas.back()->getWeight() <= arestaAtual->getWeight()){
-//                                filaArestas.push(arestaAtual);
-//                            } else{
-//                                while(!filaArestas.empty()){
-//                                    if(encontrouPosicao || filaArestas.front()->getWeight() <= arestaAtual->getWeight()){
-//                                        cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestas.front()->getTargetId())->getIdRotulo() << endl;
-//                                        filaArestasAux.push(filaArestas.front());
-//                                        filaArestas.pop();
-//                                    } else{
-//                                        cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
-//                                        filaArestasAux.push(arestaAtual);
-//                                        encontrouPosicao = true;
-//                                    }
-//                                }
-//                            }
-//                        } else if(filaArestas.empty()){ //verifica se a fila principal esta vazia
-//                            if(filaArestasAux.back()->getWeight() <= arestaAtual->getWeight()) {
-//                                filaArestasAux.push(arestaAtual);
-//                            } else {
-//                                while(!filaArestasAux.empty()){
-//                                    if(encontrouPosicao || filaArestasAux.front()->getWeight() <= arestaAtual->getWeight()){
-//                                        cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestasAux.front()->getTargetId())->getIdRotulo() << endl;
-//                                        filaArestas.push(filaArestasAux.front());
-//                                        filaArestasAux.pop();
-//                                    } else{
-//                                        cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
-//                                        filaArestas.push(arestaAtual);
-//                                        encontrouPosicao = true;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                arestaAtual = arestaAtual->getNextEdge();
-//            }
-//        }
-//        noAtual = noAtual->getNextNode();
-//    }
 
     cout << "Tamanho da fila principal: " << filaArestas.size() << endl;
     cout << "Tamanho da fila auxiliar: " << filaArestasAux.size() << endl;

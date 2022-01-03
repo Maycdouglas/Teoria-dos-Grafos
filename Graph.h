@@ -47,11 +47,10 @@ public:
     string buscaEmLargura(int id);
     string fechoTransitivoDireto(int id);
     void fechoTransitivoDiretoAux(int id, bool *verticesVisitados);
-    string fechoTransitivoIndireto(int id);
-    void fechoTransitivoIndiretoAux(int id, bool *visitados);
+    string fechoTransitivoIndireto(int idRotulo);
+    void fechoTransitivoIndiretoAux(int idNoOrigem, int idNoAlvo, bool *visitados, list<int> *fechoTransitivoIndireto, list<int> *caminho);
     void gerarSubgrafoVerticeInduzido(string *grafo, string *arestaDOT, int idRotulo, bool *verticesVisitados);
     bool visitou(int id, bool *verticesVisitados);
-    string dijkstra2(int idRotuloInicial, int idRotuloFinal);
     string dijkstra(int idRotuloInicial, int idRotuloFinal);
     string gerarCaminhoMinimo(float *vetorCustos, Node **vetorPais, Node *noInicial, Node *noFinal);
     int extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVerticesDisponiveis);

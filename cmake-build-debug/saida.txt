@@ -1,4 +1,3 @@
 strict digraph G {
-10 -> 20 [weight = 10, label = 10]
-}
+
 
