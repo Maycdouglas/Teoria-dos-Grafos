@@ -539,6 +539,7 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
 
     Node *noInicial = getNodeByRotulo(idRotuloInicial), *noFinal = getNodeByRotulo(idRotuloFinal);
 
+    //Clausula de segurança para nós que não existem no grafo
     if(noInicial == nullptr || noFinal == nullptr){
         cout << "Insira um noh válido!" << endl;
         return "";
@@ -549,6 +550,7 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
         cout << "O noh inserido nao possui arestas saindo dele!" << endl;
         return "";
     }
+
     Node *noAtual = first_node;
     Node *noAlvo;
 
@@ -673,6 +675,8 @@ string Graph::gerarCaminhoMinimo(float *vetorCustos, Node **vetorPais, Node *noI
     string grafo, arestaDOT;
     montarCabecalhoGrafoDOT(&grafo,&arestaDOT);
 
+    //TALVEZ EU CONSIGA FAZER ISSO AQUI SEM USAR ARESTA, USANDO O VETOR CUSTOS
+
     int idRotuloNoAtual, idRotuloNoAlvo;
     Node *noAtual = noFinal;
     Node *noAlvo = vetorPais[noFinal->getId() - 1];
@@ -745,20 +749,43 @@ void Graph::retirarElementoLista(list<int> *listaVerticesDisponiveis, int vertic
 string Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
     float matrizVertices[this->order][this->order];
     int i,j,k,l;
-    Node *no, *noAux;
-    Edge *aresta;
+    Node *noAtual, *noAlvo;
+    Node *noInicial = getNodeByRotulo(idRotuloInicial);
+    Node *noFinal = getNodeByRotulo(idRotuloFinal);
+    Edge *arestaAtual;
+    int idInicial = noInicial->getId();
+    int idFinal = noFinal->getId();
+    list <int> caminho;
+    list<int>::iterator it;
 
+    //Clausula de segurança para nós que não existem no grafo
+    if(noInicial == nullptr || noFinal == nullptr){
+        cout << "Insira um noh válido!" << endl;
+        return "";
+    }
+
+    //Clausula de segurança para nós que não possuem Out Degree
+    if(noInicial->getOutDegree() < 1){
+        cout << "O noh inserido nao possui arestas saindo dele!" << endl;
+        return "";
+    }
+
+    //Loop responsável por montar a matriz inicial
     for(i = 0; i < this->order; i++) {
-        no = getNode(i + 1);
+        noAtual = getNode(i + 1);
         for(j = 0; j < this->order; j++) {
-            noAux = getNode(j + 1);
-            if(i == j) {
+            noAlvo = getNode(j + 1);
+            if(i == j) {  //verifica se é a posicao referente a distancia do vertice até ele mesmo
                 matrizVertices[i][j] = 0;
-            } else if(no->searchEdge(noAux->getId())){
-                aresta = no->hasEdgeBetween(noAux->getId());
-                matrizVertices[i][j] = aresta->getWeight();
+            } else if(noAtual->searchEdge(noAlvo->getId())){ //verifica se existe uma aresta entre os dois vertices
+                arestaAtual = noAtual->hasEdgeBetween(noAlvo->getId());
+                matrizVertices[i][j] = arestaAtual->getWeight(); //insere a distancia entre os dois vertices na matriz
+                if(i == idInicial - 1 && j == idFinal - 1){
+                    caminho.push_front(idInicial);
+                    caminho.push_back(idFinal);
+                }
             } else {
-                matrizVertices[i][j] = INFINITO;
+                matrizVertices[i][j] = INFINITO; //quando nao houver arestas entre os vertices, o valor INFINITO é usado
             }
         }
     }
@@ -772,22 +799,40 @@ string Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
         cout << endl;
     }
 
-    for( k = 0; k < this->order; k++) {
 
+    //Loop responsável por atualizar a matriz com os caminhos obtidos
+    for( k = 0; k < this->order; k++) {
         for(i = 0; i < this->order; i++) {
-            no = getNode(i + 1);
+            noAtual = getNode(i + 1); //recebe o no origem de acordo com a linha na matriz
             for(j = 0; j < this->order; j++) {
-                noAux = getNode(j + 1);
-                if(i != k && j != k && i != j){
-                    if(matrizVertices[i][k] != INFINITO && matrizVertices[k][j] != INFINITO){
-                        if(matrizVertices[i][j] > matrizVertices[i][k] + matrizVertices[k][j]){
+                noAlvo = getNode(j + 1); //recebe o no alvo de acordo com a coluna na matriz
+                if(i != k && j != k && i != j){ //verifica se os indices da matriz são diferentes entre si
+                    if(matrizVertices[i][k] != INFINITO && matrizVertices[k][j] != INFINITO){ //verifica se o vertice nao esta numa linha ou coluna que é impossível sofrer alterações no momento
+                        if(matrizVertices[i][j] > matrizVertices[i][k] + matrizVertices[k][j]){ //verifica se o caminho atual na matriz é maior que o novo caminho proposto
                             matrizVertices[i][j] = matrizVertices[i][k] + matrizVertices[k][j];
+                            if(i == idInicial - 1 && j == idFinal - 1){
+                                if(caminho.empty()){
+                                    caminho.push_front(k + 1);
+                                    caminho.push_back(idFinal);
+                                } else{
+                                    it = caminho.end();
+                                    it--;
+                                    caminho.insert(it,k + 1);
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+        cout << "Impressao da matriz " << k << endl;
 
+        for(i = 0; i < this->order; i++) {
+            for(j = 0; j < this->order; j++) {
+                cout << matrizVertices[i][j] << " ";
+            }
+            cout << endl;
+        }
     }
 
     cout << "Impressao da matriz final: " << endl;
@@ -799,8 +844,50 @@ string Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
         cout << endl;
     }
 
+    cout << "Imprime a lista final: " << endl;
+    for(list<int>::iterator it = caminho.begin(); it!=caminho.end();it++){
+        cout << *it << " ";
+    }
 
-    return "maycon";
+    string grafo;
+
+    if(!caminho.empty()){
+        grafo = gerarCaminhoMinimoFloyd(&caminho, matrizVertices[0]);
+    } else{
+        cout << "Nao possui caminho entre os dois vertices" << endl;
+        return "";
+    }
+
+
+    cout << grafo << endl;
+
+
+
+
+    return grafo;
+}
+
+string Graph::gerarCaminhoMinimoFloyd(list<int> *caminho, float *matrizVertices){
+    string grafo, arestaDOT;
+    montarCabecalhoGrafoDOT(&grafo,&arestaDOT);
+    Node *noAtual, *noAlvo;
+    int idNoAtual, idNoAlvo;
+    int idNoFinal = caminho->back();
+    float distancia;
+
+    for(list<int>::iterator it = caminho->begin(); *it!=caminho->back();it++){
+        noAtual = getNode(*it);
+        idNoAtual = noAtual->getId();
+        noAlvo = getNode(*next(it,1));
+        idNoAlvo = noAlvo->getId();
+
+        distancia = matrizVertices[this->order*(idNoAtual - 1) + (idNoAlvo - 1)];
+
+        montarArestaGrafoDOT(&grafo,&arestaDOT,noAtual->getIdRotulo(),noAlvo->getIdRotulo(),distancia,false);
+    }
+    grafo += "}";
+
+    return grafo;
 }
 
 Graph* Graph::kruskal(){

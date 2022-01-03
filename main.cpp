@@ -179,7 +179,12 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
         }
 
         case 5:{
-            string teste = graph->floyd(10,20);
+            int idRotuloInicial, idRotuloFinal;
+            cout << "Insira o ID do Noh Inicial: ";
+            cin >> idRotuloInicial;
+            cout << "\nInsira o ID do Noh Final: ";
+            cin >> idRotuloFinal;
+            output_file << graph->floyd(idRotuloInicial,idRotuloFinal);
             break;
         }
 
