@@ -896,6 +896,7 @@ Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
     int idRotulo;
     Node *noAtual;
 
+    //Loop responsavel por inserir os nos selecionados na arvore
     for(int i = 0; i < qntdVertices; i++){
         noAtual = getNodeByRotulo(subconjuntoVertices[i]);
         if(noAtual != nullptr){
@@ -917,59 +918,69 @@ Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
     cout << endl;
 
     queue<Edge*> filaArestas, filaArestasAux;
-    noAtual = arvore->getFirstNode();
-    Edge *aresta;
-    bool encontrouPosicao;
 
-    while(noAtual != nullptr){
-        cout << "=======" << endl;
-        cout << "Estou no Noh " << noAtual->getIdRotulo() << endl;
-        cout << "-------" << endl;
-        aresta = noAtual->getFirstEdge();
-        while(aresta != nullptr){
-            cout << "Estou na Aresta com alvo " << getNode(aresta->getTargetId())->getIdRotulo() << endl;
-            encontrouPosicao = false;
-            if(!aresta->getRetorno()){
-                if (filaArestas.empty() && filaArestasAux.empty()){ //verifica se as duas filas estao vazias
-                    filaArestas.push(aresta);
-                } else if(filaArestasAux.empty()) { //verifica se a fila auxiliar esta vazia
-                    if(filaArestas.back()->getWeight() <= aresta->getWeight()){
-                        filaArestas.push(aresta);
-                    } else{
-                        while(!filaArestas.empty()){
-                            if(encontrouPosicao || filaArestas.front()->getWeight() <= aresta->getWeight()){
-                                cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestas.front()->getTargetId())->getIdRotulo() << endl;
-                                filaArestasAux.push(filaArestas.front());
-                                filaArestas.pop();
-                            } else{
-                                cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(aresta->getTargetId())->getIdRotulo() << endl;
-                                filaArestasAux.push(aresta);
-                                encontrouPosicao = true;
-                            }
-                        }
-                    }
-                } else if(filaArestas.empty()){ //verifica se a fila principal esta vazia
-                    if(filaArestasAux.back()->getWeight() <= aresta->getWeight()) {
-                        filaArestasAux.push(aresta);
-                    } else {
-                        while(!filaArestasAux.empty()){
-                            if(encontrouPosicao || filaArestasAux.front()->getWeight() <= aresta->getWeight()){
-                                cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestasAux.front()->getTargetId())->getIdRotulo() << endl;
-                                filaArestas.push(filaArestasAux.front());
-                                filaArestasAux.pop();
-                            } else{
-                                cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(aresta->getTargetId())->getIdRotulo() << endl;
-                                filaArestas.push(aresta);
-                                encontrouPosicao = true;
-                            }
-                        }
-                    }
-                }
-            }
-            aresta = aresta->getNextEdge();
-        }
-        noAtual = noAtual->getNextNode();
-    }
+    ordenarArestasOrdemCrescente(arvore,&filaArestas,&filaArestasAux);
+
+//    noAtual = this->first_node;
+//    Edge *arestaAtual;
+//    bool encontrouPosicao;
+//
+//    //PRECISO VERIFICAR SE O NOATUAL ESTA NA ARVORE E SE O ALVO DA ARESTA ATUAL TAMBEM ESTA NA ARVORE. USAREI O IDROTULO PARA A VERIFICACAO
+//
+//    //loop responsavel por percorrer cada no do grafo e ordenar a lista de arestas
+//    while(noAtual != nullptr){
+//        cout << "=======" << endl;
+//        cout << "Estou no Noh " << noAtual->getIdRotulo() << endl;
+//        cout << "-------" << endl;
+//        if (arvore->getNodeByRotulo(noAtual->getIdRotulo()) != nullptr){
+//            arestaAtual = noAtual->getFirstEdge();
+//            while(arestaAtual != nullptr){
+//                cout << "Estou na Aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
+//                if(arvore->getNodeByRotulo(getNode(arestaAtual->getTargetId())->getIdRotulo()) != nullptr){
+//                    encontrouPosicao = false;
+//                    if(!arestaAtual->getRetorno()){
+//                        if (filaArestas.empty() && filaArestasAux.empty()){ //verifica se as duas filas estao vazias
+//                            filaArestas.push(arestaAtual);
+//                        } else if(filaArestasAux.empty()) { //verifica se a fila auxiliar esta vazia
+//                            if(filaArestas.back()->getWeight() <= arestaAtual->getWeight()){
+//                                filaArestas.push(arestaAtual);
+//                            } else{
+//                                while(!filaArestas.empty()){
+//                                    if(encontrouPosicao || filaArestas.front()->getWeight() <= arestaAtual->getWeight()){
+//                                        cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestas.front()->getTargetId())->getIdRotulo() << endl;
+//                                        filaArestasAux.push(filaArestas.front());
+//                                        filaArestas.pop();
+//                                    } else{
+//                                        cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
+//                                        filaArestasAux.push(arestaAtual);
+//                                        encontrouPosicao = true;
+//                                    }
+//                                }
+//                            }
+//                        } else if(filaArestas.empty()){ //verifica se a fila principal esta vazia
+//                            if(filaArestasAux.back()->getWeight() <= arestaAtual->getWeight()) {
+//                                filaArestasAux.push(arestaAtual);
+//                            } else {
+//                                while(!filaArestasAux.empty()){
+//                                    if(encontrouPosicao || filaArestasAux.front()->getWeight() <= arestaAtual->getWeight()){
+//                                        cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestasAux.front()->getTargetId())->getIdRotulo() << endl;
+//                                        filaArestas.push(filaArestasAux.front());
+//                                        filaArestasAux.pop();
+//                                    } else{
+//                                        cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
+//                                        filaArestas.push(arestaAtual);
+//                                        encontrouPosicao = true;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                arestaAtual = arestaAtual->getNextEdge();
+//            }
+//        }
+//        noAtual = noAtual->getNextNode();
+//    }
 
     cout << "Tamanho da fila principal: " << filaArestas.size() << endl;
     cout << "Tamanho da fila auxiliar: " << filaArestasAux.size() << endl;
@@ -977,11 +988,6 @@ Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
     if(filaArestas.empty() && !filaArestasAux.empty()) {
         filaArestas.swap(filaArestasAux);
     }
-
-//    while(!filaArestas.empty()){
-//        cout << filaArestas.front()->getWeight() << " ";
-//        filaArestas.pop();
-//    }
 
     cout << endl;
 
@@ -1034,6 +1040,66 @@ Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
     cout << "NUMERO DE ARESTAS DA ARVORE: " << arvore->getNumberEdges() << endl;
 
     return arvore;
+}
+
+void Graph::ordenarArestasOrdemCrescente(Graph *arvore, queue<Edge*> *filaArestas, queue<Edge*> *filaArestasAux){
+    Node *noAtual = this->first_node;
+    Edge *arestaAtual;
+    bool encontrouPosicao;
+    //loop responsavel por percorrer cada no do grafo e ordenar a lista de arestas
+    while(noAtual != nullptr){
+        cout << "=======" << endl;
+        cout << "Estou no Noh " << noAtual->getIdRotulo() << endl;
+        cout << "-------" << endl;
+        if (arvore->getNodeByRotulo(noAtual->getIdRotulo()) != nullptr){
+            arestaAtual = noAtual->getFirstEdge();
+            while(arestaAtual != nullptr){
+                cout << "Estou na Aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
+                if(arvore->getNodeByRotulo(getNode(arestaAtual->getTargetId())->getIdRotulo()) != nullptr){
+                    encontrouPosicao = false;
+                    if(!arestaAtual->getRetorno()){
+                        if (filaArestas->empty() && filaArestasAux->empty()){ //verifica se as duas filas estao vazias
+                            filaArestas->push(arestaAtual);
+                        } else if(filaArestasAux->empty()) { //verifica se a fila auxiliar esta vazia
+                            if(filaArestas->back()->getWeight() <= arestaAtual->getWeight()){
+                                filaArestas->push(arestaAtual);
+                            } else{
+                                while(!filaArestas->empty()){
+                                    if(encontrouPosicao || filaArestas->front()->getWeight() <= arestaAtual->getWeight()){
+                                        cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestas->front()->getTargetId())->getIdRotulo() << endl;
+                                        filaArestasAux->push(filaArestas->front());
+                                        filaArestas->pop();
+                                    } else{
+                                        cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
+                                        filaArestasAux->push(arestaAtual);
+                                        encontrouPosicao = true;
+                                    }
+                                }
+                            }
+                        } else if(filaArestas->empty()){ //verifica se a fila principal esta vazia
+                            if(filaArestasAux->back()->getWeight() <= arestaAtual->getWeight()) {
+                                filaArestasAux->push(arestaAtual);
+                            } else {
+                                while(!filaArestasAux->empty()){
+                                    if(encontrouPosicao || filaArestasAux->front()->getWeight() <= arestaAtual->getWeight()){
+                                        cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestasAux->front()->getTargetId())->getIdRotulo() << endl;
+                                        filaArestas->push(filaArestasAux->front());
+                                        filaArestasAux->pop();
+                                    } else{
+                                        cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
+                                        filaArestas->push(arestaAtual);
+                                        encontrouPosicao = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                arestaAtual = arestaAtual->getNextEdge();
+            }
+        }
+        noAtual = noAtual->getNextNode();
+    }
 }
 
 bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){

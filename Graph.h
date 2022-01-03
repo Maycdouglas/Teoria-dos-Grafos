@@ -6,6 +6,7 @@
 #include <fstream>
 #include <stack>
 #include <list>
+#include <queue>
 
 using namespace std;
 
@@ -59,6 +60,7 @@ public:
     string floyd(int idRotuloInicial, int idRotuloFinal );
     string gerarCaminhoMinimoFloyd(list<int> *caminho, float *matrizVertices);
     Graph* kruskal(int *subconjuntoVertices, int qntdVertices);
+    void ordenarArestasOrdemCrescente(Graph *arvore, queue<Edge*> *filaArestas, queue<Edge*> *filaArestasAux);
     bool estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo);
     void montarCabecalhoGrafoDOT(string *grafo, string *arestaDOT);
     void montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloNoAtual, int idRotuloNoAlvo, float pesoAresta, bool retorno);
