@@ -833,37 +833,51 @@ Graph* Graph::prim(int *subconjuntoVertices, int qntdVertices)
     Graph *arvore = new Graph(0,this->directed,this->weighted_edge,this->weighted_node);
     vector<int> visitados;
     visitados.push_back(this->first_node->getId());
+    Edge *aresta;
+
+    cout << "Chegou 1" << endl;
     
     while (visitados.size() != this->order){
+        cout << "Chegou 2" << endl;
         int idEdgeMinS;
         int idEdgeMinT;
         float pesoMin = INFINITY;
 
         for (int i = 0; i < visitados.size(); i++){
+            cout << "Chegou 3" << endl;
             Node *aux = this->getNode(visitados[i]);
-            Edge *aresta = aux->getFirstEdge();
+            aresta = aux->getFirstEdge();
+            cout << "Chegou 4" << endl;
             while (aresta != nullptr){
+                cout << "Chegou 5" << endl;
                 bool visit = false;
                 if (aresta->getWeight() < pesoMin){
+                    cout << "Chegou 6" << endl;
                     for (int j = 0; j < visitados.size(); j++){
+                        cout << "Chegou 7" << endl;
                         if (aresta->getTargetId() == visitados[j]){
+                            cout << "Chegou 8" << endl;
                             visit = true;
                             break;
                         }
                     }
+                    cout << "Chegou 9" << endl;
                     if (!visit){
+                        cout << "Chegou 10" << endl;
                         idEdgeMinS = aux->getId();
                         idEdgeMinT = aresta->getTargetId();
                         pesoMin = aresta->getWeight();
                     }
                 }
-
+                cout << "Chegou 11" << endl;
                 aresta = aresta->getNextEdge();
             }
         }
+        cout << "Chegou 12" << endl;
         if(aresta->getWeight() < pesoMin){
-        arvore->insertEdge(getNode(idEdgeMinS)->getIdRotulo(), getNode(idEdgeMinT)->getIdRotulo(), pesoMin);
-        visitados.push_back(idEdgeMinT);
+            cout << "Chegou 13" << endl;
+            arvore->insertEdge(getNode(idEdgeMinS)->getIdRotulo(), getNode(idEdgeMinT)->getIdRotulo(), pesoMin);
+            visitados.push_back(idEdgeMinT);
         }
     }
 
