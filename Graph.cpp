@@ -834,12 +834,10 @@ Graph* Graph::prim(int *subconjuntoVertices, int qntdVertices)
     vector<int> visitados;
     visitados.push_back(this->first_node->getId());
     
-
-
     while (visitados.size() != this->order){
         int idEdgeMinS;
         int idEdgeMinT;
-        float pesoMin = INFINITO;
+        float pesoMin = INFINITY;
 
         for (int i = 0; i < visitados.size(); i++){
             Node *aux = this->getNode(visitados[i]);
@@ -863,8 +861,10 @@ Graph* Graph::prim(int *subconjuntoVertices, int qntdVertices)
                 aresta = aresta->getNextEdge();
             }
         }
+        if(aresta->getWeight() < pesoMin){
         arvore->insertEdge(getNode(idEdgeMinS)->getIdRotulo(), getNode(idEdgeMinT)->getIdRotulo(), pesoMin);
         visitados.push_back(idEdgeMinT);
+        }
     }
 
     cout << "ORDEM DA ARVORE: " << arvore->getOrder() << endl;
