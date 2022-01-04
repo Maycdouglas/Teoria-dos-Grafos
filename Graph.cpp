@@ -155,22 +155,22 @@ void Graph::removeNode(int id){
     Node *no = this->first_node;
     Node *noAux = this->first_node;
 
-    if(this->first_node->getId() == id) ///verifica se o no a ser excluído é o primeiro nó do grafo
+    if(this->first_node->getId() == id) //verifica se o no a ser excluído é o primeiro nó do grafo
     {
         this->first_node = no->getNextNode();
         delete no;
         return;
     }
 
-    no = no->getNextNode();  ///nó recebe o próximo nó
+    no = no->getNextNode();  //nó recebe o próximo nó
 
-    while (no != nullptr ) ///loop que busca o nó a ser excluído e o seu antecessor
+    while (no != nullptr ) //loop que busca o nó a ser excluído e o seu antecessor
     {
         if (no->getId() == id)
         {
-            noAux->setNextNode(no->getNextNode()); ///altera o próximo nó do antecessor para ser o nó sucessor do nó que será excluído
+            noAux->setNextNode(no->getNextNode()); //altera o próximo nó do antecessor para ser o nó sucessor do nó que será excluído
 
-            if (no == last_node) ///verifica se o nó a ser excluído é o último do grafo
+            if (no == last_node) //verifica se o nó a ser excluído é o último do grafo
             {
                 last_node = noAux;
             }
@@ -189,9 +189,9 @@ bool Graph::searchNode(int id)
 {
     Node *no = this->first_node;
 
-    while (no != nullptr) ///loop responsavel por encontrar o nó no grafo
+    while (no != nullptr) //loop responsavel por encontrar o nó no grafo
     {
-        if (no->getIdRotulo() == id) ///condicional que verifica se o ID Rotulo do nó foi encontrado
+        if (no->getIdRotulo() == id) //condicional que verifica se o ID Rotulo do nó foi encontrado
         {
             return true;
         }
@@ -205,9 +205,9 @@ Node *Graph::getNode(int id)
 {
     Node *no = this->first_node;
 
-    while (no != nullptr) ///loop responsavel por encontrar o nó no grafo
+    while (no != nullptr) //loop responsavel por encontrar o nó no grafo
     {
-        if (no->getId() == id) ///condicional que verifica se o ID do nó foi encontrado
+        if (no->getId() == id) //condicional que verifica se o ID do nó foi encontrado
         {
             return no;
         }
@@ -221,9 +221,9 @@ Node *Graph::getNodeByRotulo(int id)
 {
     Node *no = this->first_node;
 
-    while (no != nullptr) ///loop responsavel por encontrar o nó no grafo
+    while (no != nullptr) //loop responsavel por encontrar o nó no grafo
     {
-        if (no->getIdRotulo() == id) ///condicional que verifica se o ID do nó foi encontrado
+        if (no->getIdRotulo() == id) //condicional que verifica se o ID do nó foi encontrado
         {
             return no;
         }
@@ -241,12 +241,12 @@ string Graph::buscaEmLargura(int id) {
 
     //Clausula de segurança, para caso insira um ID inválido
     if(noAtual == nullptr){
-        cout << "O no escolhido nao esta presente no grafo!" << endl;
+        cout << "\nO no escolhido nao esta presente no grafo!\n" << endl;
         return "";
     }
 
     if(noAtual->getOutDegree() < 1) {
-        cout << "O no escolhido possui grau de saida igual a zero!" << endl;
+        cout << "\nO no escolhido possui grau de saida igual a zero!\n" << endl;
     }
 
     Node *noAlvo;
@@ -341,31 +341,31 @@ void Graph::montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloN
 
 string Graph::fechoTransitivoDireto(int idRotulo) {
 
-    //Clausula de segurança, para caso o grafo nao seja direcionado
+    //Clausula de segurança para caso o grafo nao seja direcionado
     if(!this->directed){
-        cout << "Este grafo nao eh direcionado!" << endl;
+        cout << "\nO grafo precisa ser direcionado!\n" << endl;
         return "";
     }
 
-    //Clausula de segurança, para caso insira um ID inválido
+    //Clausula de segurança para caso insira um ID inválido
     if(getNodeByRotulo(idRotulo) == nullptr){
-        cout << "Este ID nao existe no grafo!" << endl;
+        cout << "\nO no escolhido nao esta presente no grafo!\n" << endl;
         return "";
     }
 
     string grafo, arestaDOT;
     montarCabecalhoGrafoDOT(&grafo,&arestaDOT);
 
-    int idNoOrigem = getNodeByRotulo(idRotulo)->getId(); //recebe ID do No Inicial
+    int idNoOrigem = getNodeByRotulo(idRotulo)->getId();
     bool verticesVisitados[this->order];
 
-    for(int i = 0; i < this->order; i++){ //seta todos os elementos do array com 0
+    for(int i = 0; i < this->order; i++){ //altera o valor de todos os elementos do array para 0
         verticesVisitados[i] = false;
     }
 
-    fechoTransitivoDiretoAux(idNoOrigem, verticesVisitados); //inicia busca em profundidade
+    fechoTransitivoDiretoAux(idNoOrigem, verticesVisitados); //Inicia uma busca em profundidade
 
-    gerarSubgrafoVerticeInduzido(&grafo,&arestaDOT,idRotulo,verticesVisitados);
+    gerarSubgrafoVerticeInduzido(&grafo,&arestaDOT,idRotulo,verticesVisitados); //Gera o subgrafo vertice induzido com o fecho transitivo direto
 
     cout << grafo << endl;
 
@@ -378,11 +378,12 @@ void Graph::fechoTransitivoDiretoAux(int idNoOrigem, bool *verticesVisitados) {
     Node *noAtual = getNode(idNoOrigem);
     Edge *arestaAtual = noAtual->getFirstEdge();
 
-    verticesVisitados[idNoOrigem - 1] = true;
+    verticesVisitados[idNoOrigem - 1] = true; //Marca o vertice como visitado
 
+    //percorre as arestas do nó
     while(arestaAtual != nullptr) {
 
-        if(!verticesVisitados[arestaAtual->getTargetId() - 1]){
+        if(!verticesVisitados[arestaAtual->getTargetId() - 1]){ //verifica se o vertice já foi visitado
             fechoTransitivoDiretoAux(arestaAtual->getTargetId(), verticesVisitados);
         }
 
@@ -396,20 +397,23 @@ void Graph::gerarSubgrafoVerticeInduzido(string *grafo, string *arestaDOT, int i
     Edge *arestaAtual;
     int idRotuloNoAtual, idRotuloNoAlvo, idNoAtual, idNoAlvo;
 
+    //percorre os elementos do array de vertices visitados
     for(int i = 0; i < this->order; i++){
+        //verifica se o vertice foi visitado
         if(verticesVisitados[i]){
             noAtual = getNode(i + 1);
             arestaAtual = noAtual->getFirstEdge();
             idRotuloNoAtual = noAtual->getIdRotulo();
             idNoAtual = noAtual->getId();
-
+            //verifica o nó origem e o nó alvo não são o mesmo
             if((idRotuloNoAtual != idRotuloNoOrigem))
             {
+                //percorre as arestas
                 while(arestaAtual != nullptr){
                     noAlvo = getNode(arestaAtual->getTargetId());
                     idRotuloNoAlvo = noAlvo->getIdRotulo();
                     idNoAlvo = noAlvo->getId();
-
+                    //verifica se visitou o nó alvo e se o o nó origem e nó alvo são diferentes
                     if(visitou(idNoAlvo, verticesVisitados) && idRotuloNoAlvo != idRotuloNoOrigem) {
                         montarArestaGrafoDOT(grafo,arestaDOT,idRotuloNoAtual,idRotuloNoAlvo,arestaAtual->getWeight(),false);
                     }
@@ -510,43 +514,39 @@ void Graph::fechoTransitivoIndiretoAux(int idNoOrigem, int idNoAlvo, bool *verti
 
 string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
 
-    //FALTA TRATAR OS PESOS NEGATIVOS
-
     Node *noInicial = getNodeByRotulo(idRotuloInicial), *noFinal = getNodeByRotulo(idRotuloFinal);
 
     //Clausula de segurança para nós que não existem no grafo
     if(noInicial == nullptr || noFinal == nullptr){
-        cout << "Insira um noh válido!" << endl;
+        cout << "\nInsira um noh valido!\n" <<endl;
         return "";
     }
 
     //Clausula de segurança para nós que não possuem Out Degree
     if(noInicial->getOutDegree() < 1){
-        cout << "O noh inserido nao possui arestas saindo dele!" << endl;
+        cout << "\nO noh inserido nao possui arestas saindo dele!\n"<< endl;
         return "";
     }
 
-    Node *noAtual = first_node;
-    Node *noAlvo;
+    Node *noAlvo, *noAtual = first_node;
 
-    float vetorCustos[this->order];
+    float vetorCustos[this->order], menorCustoCaminho = INFINITY, menorCustoCaminhoAux;
     Node *vetorPais[this->order];
     list<int> listaVerticesDisponiveis;
     Edge *arestaAtual;
-    float menorCustoCaminho = INFINITY;
-    float menorCustoCaminhoAux;
-    int idNoMenorCustoCaminho;
-    int idNoMenorCustoCaminhoAux;
-
-    cout << "Chegou aqui 1" << endl;
+    int idNoMenorCustoCaminho, idNoMenorCustoCaminhoAux;
 
     //Percorre os nós do grafo para popular a lista e os vetores
     while(noAtual != nullptr) {
         if(noAtual != noInicial){
             listaVerticesDisponiveis.push_back(noAtual->getId());
         }
-
         arestaAtual = noInicial->hasEdgeBetween(noAtual->getId());
+        //Clausula de segurança para o caso da aresta ter peso negativo
+        if(arestaAtual != nullptr && arestaAtual->getWeight() < 0){
+            cout << "\nAlgoritmo interrompido por ter aresta com peso negativo!\n" << endl;
+            return "";
+        }
 
         if(arestaAtual != nullptr) { //caso o nó atual seja um vizinho do nó inicial os vetores sao atualizados de acordo
             vetorPais[noAtual->getId() - 1] = noInicial;
@@ -559,59 +559,56 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
             vetorCustos[noAtual->getId() - 1] = INFINITY;
             vetorPais[noAtual->getId() - 1] = nullptr;
         }
-
         noAtual = noAtual->getNextNode();
     }
 
     vetorCustos[noInicial->getId() - 1] = 0;
 
-    cout << "Chegou aqui 2" << endl;
-
     noAtual = getNode(idNoMenorCustoCaminho);
     retirarElementoLista(&listaVerticesDisponiveis,idNoMenorCustoCaminho);
 
-    cout << "Chegou aqui 3" << endl;
-
-//    int contador;
     bool atualizouAuxiliaresMenorCusto;
 
+    //percorre a lista de vertices disponiveis
     while(!listaVerticesDisponiveis.empty()){
 
-        cout << "Estou no noh: " << noAtual->getIdRotulo() << " " << noAtual->getId() << endl;
-
+        //verifica se o nó atual possui arestas com a origem nele
         if(noAtual->getOutDegree() < 1){
             idNoMenorCustoCaminho = extrairIdMenorCustoDisponivel(vetorCustos,&listaVerticesDisponiveis);
+            //verifica se o id extraido é inválido e sai do loop
             if(idNoMenorCustoCaminho < 1){
                break;
             }
             menorCustoCaminho = vetorCustos[idNoMenorCustoCaminho - 1];
         } else{
-//            contador = 0;
             atualizouAuxiliaresMenorCusto = false;
             menorCustoCaminhoAux = INFINITY;
             arestaAtual = noAtual->getFirstEdge();
+            //percorre as arestas do nó
             while(arestaAtual != nullptr){
+                //Clausula de segurança para o caso da aresta ter peso negativo
+                if(arestaAtual->getWeight() < 0){
+                    cout << "\nAlgoritmo interrompido por ter aresta com peso negativo!\n" << endl;
+                    return "";
+                }
                 noAlvo = getNode(arestaAtual->getTargetId());
-                cout << "O no alvo da aresta atual eh: " << noAlvo->getIdRotulo() << " " << noAlvo->getId() << endl;
-                cout << "Chegou aqui 4" << endl;
+                //verifica se o nó alvo está na lista de vertices disponiveis
                 if(estaNaLista(noAlvo->getId(),&listaVerticesDisponiveis)){
-                    cout << "Chegou aqui 5" << endl;
+                    //verifica se o novo custo é menor que o atual
                     if(vetorCustos[noAlvo->getId() - 1] > arestaAtual->getWeight() + menorCustoCaminho){
-                        cout << "Chegou aqui 5.1" << endl;
                         vetorCustos[noAlvo->getId() - 1] = arestaAtual->getWeight() + menorCustoCaminho;
                         vetorPais[noAlvo->getId() - 1] = noAtual;
+                        //verifica o novo custo é o menor de todos
                         if(vetorCustos[noAlvo->getId() - 1] < menorCustoCaminhoAux){
-                            cout << "Chegou aqui 5.2" << endl;
                             menorCustoCaminhoAux = vetorCustos[noAlvo->getId() - 1];
                             idNoMenorCustoCaminhoAux = noAlvo->getId();
                             atualizouAuxiliaresMenorCusto = true;
-//                            contador++;
                         }
                     }
                 }
                 arestaAtual = arestaAtual->getNextEdge();
             }
-            cout << "Chegou aqui 6" << endl;
+            //verifica se o valor e id do menor custo foi atualizado
             if(atualizouAuxiliaresMenorCusto){
                 menorCustoCaminho = menorCustoCaminhoAux;
                 idNoMenorCustoCaminho = idNoMenorCustoCaminhoAux;
@@ -620,55 +617,38 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
                 menorCustoCaminho = vetorCustos[idNoMenorCustoCaminho - 1];
             }
         }
-        cout << "Chegou aqui 7" << endl;
         noAtual = getNode(idNoMenorCustoCaminho);
         retirarElementoLista(&listaVerticesDisponiveis,idNoMenorCustoCaminho);
-        cout << "Chegou aqui 8" << endl;
     }
 
-    cout << "======<3" << endl;
-    //Imprime vetor de pesos para conferir
-    for(int i = 0; i < this->order; i++){
-        cout<< "Custo vertice " << i + 1 << ": " << vetorCustos[i] << endl;
-        if(vetorPais[i] != nullptr){
-            cout << "Pai do vertice " << i + 1 << ": " <<vetorPais[i]->getIdRotulo() << endl;
-        } else{
-            cout << "Pai do vertice: "<< "Pai nulo" << endl;
-        }
-    }
+    cout << "\nO caminho minimo entre os vertices eh: " << vetorCustos[noFinal->getId() - 1] << "\n" << endl;
 
-    //Montar caminho
-    string grafo = gerarCaminhoMinimo(vetorCustos,vetorPais,noInicial,noFinal);
-
-    cout << grafo << endl;
+    //Monta caminho
+    string grafo = gerarCaminhoMinimo(vetorPais,noInicial,noFinal);
 
     return grafo;
 
 }
 
-string Graph::gerarCaminhoMinimo(float *vetorCustos, Node **vetorPais, Node *noInicial, Node *noFinal){
+string Graph::gerarCaminhoMinimo(Node **vetorPais, Node *noInicial, Node *noFinal){
     string grafo, arestaDOT;
     montarCabecalhoGrafoDOT(&grafo,&arestaDOT);
 
-    //TALVEZ EU CONSIGA FAZER ISSO AQUI SEM USAR ARESTA, USANDO O VETOR CUSTOS
-
-    int idRotuloNoAtual, idRotuloNoAlvo;
-    Node *noAtual = noFinal;
-    Node *noAlvo = vetorPais[noFinal->getId() - 1];
+    Node *noAtual = noFinal, *noAlvo = vetorPais[noFinal->getId() - 1];
     Edge *arestaAtual = noAlvo->hasEdgeBetween(noAtual->getId());
 
-    idRotuloNoAtual = noAtual->getIdRotulo();
-    idRotuloNoAlvo = noAlvo->getIdRotulo();
+    int idRotuloNoAtual = noAtual->getIdRotulo(), idRotuloNoAlvo = noAlvo->getIdRotulo();
 
     float pesoArestaAtual;
     pesoArestaAtual = arestaAtual->getWeight();
 
+    //percorre o vetor de pais a partir do nó final do caminho até o nó inicial do caminho
     while(noAtual != noInicial){
         idRotuloNoAtual = noAtual->getIdRotulo();
         idRotuloNoAlvo = noAlvo->getIdRotulo();
         arestaAtual = noAlvo->hasEdgeBetween(noAtual->getId());
         pesoArestaAtual = arestaAtual->getWeight();
-        montarArestaGrafoDOT(&grafo,&arestaDOT,idRotuloNoAtual,idRotuloNoAlvo,pesoArestaAtual,false);
+        montarArestaGrafoDOT(&grafo,&arestaDOT,idRotuloNoAlvo,idRotuloNoAtual,pesoArestaAtual,false);
         noAtual = noAlvo;
         noAlvo = vetorPais[noAlvo->getId() - 1];
     }
@@ -682,10 +662,11 @@ int Graph::extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVer
     int idMenorCusto = 0;
     float menorCusto = INFINITY;
 
-    cout << "Chegou aqui 50" << endl;
-
+    //percorre o vetor de custos
     for(int i = 0; i < this->order; i++){
+        //verifica se o vertice está na lista
         if(estaNaLista(i + 1,listaVerticesDisponiveis)){
+            //verifica se o valor do elemento do vetor de custos é menor que o menor custo atual
             if(vetorCustos[i] < menorCusto){
                 menorCusto = vetorCustos[i];
                 idMenorCusto = i + 1;
@@ -698,21 +679,16 @@ int Graph::extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVer
 
 bool Graph::estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis){
 
-    cout << "CHEGOU NA FUNCAO SEPARADA" << endl;
-
-    for(list<int>::iterator it = listaVerticesDisponiveis->begin(); it!=listaVerticesDisponiveis->end();it++){
-        cout << *it << " ";
+    for(auto it = listaVerticesDisponiveis->begin(); it!=listaVerticesDisponiveis->end();it++){
         if(*it == idTarget){
-            cout << endl;
             return true;
         }
     }
-    cout << endl;
     return false;
 }
 
 void Graph::retirarElementoLista(list<int> *listaVerticesDisponiveis, int verticeMenorCaminhoAtual){
-    for(list<int>::iterator it = listaVerticesDisponiveis->begin(); it!=listaVerticesDisponiveis->end();it++){
+    for(auto it = listaVerticesDisponiveis->begin(); it!=listaVerticesDisponiveis->end();it++){
         if(*it == verticeMenorCaminhoAtual)
         {
             listaVerticesDisponiveis->erase(it);
