@@ -63,7 +63,8 @@ public:
     bool estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo);
     void montarCabecalhoGrafoDOT(string *grafo, string *arestaDOT);
     void montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloNoAtual, int idRotuloNoAlvo, float pesoAresta, bool retorno);
-
+    string ordenacaoTopologica();
+    void ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack);
 
 private:
     //Auxiliar methods

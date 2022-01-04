@@ -112,58 +112,26 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
 
     switch (selecao) {
 
-        //Gera o grafo enviado
+        //Fecho Transitivo Direto
         case 1:{
-            exportarGrafo(graph,output_file);
-            Node *no = graph->getFirstNode();
-            while(no != nullptr)
-            {
-                cout << "No do grafo: " << no->getId() << endl;
-                cout << "No Rotulo do grafo: " << no->getIdRotulo() << endl;
-                cout << "Arestas: " << endl;
-                Edge *aresta = no->getFirstEdge();
-                while(aresta != nullptr)
-                {
-                    cout << "No origem: " << aresta->getOriginId() << " No alvo: " << aresta->getTargetId() << " Peso da Aresta: "<< aresta->getWeight() << endl;
-                    aresta = aresta->getNextEdge();
-                }
-                cout << "==============" << endl;
-
-                no = no->getNextNode();
-            }
-            cout << "Ordem do grafo eeh: " << graph->getOrder() << endl;
-            break;
-        }
-            //Busca em Largura
-        case 2:{
-//            exportarGrafo(graph->buscaEmLargura(40), output_file);
-                int idRotulo;
-                cout << "Insira o ID do Noh: ";
-                cin >> idRotulo;
-                output_file << graph->buscaEmLargura(idRotulo);
-            break;
-        }
-
-            //Fecho Transitivo Direto
-        case 3:{
             int idRotulo;
             cout << "Insira o ID do Noh: ";
             cin >> idRotulo;
             output_file << graph->fechoTransitivoDireto(idRotulo);
             break;
         }
-
-            //Fecho Transitivo Indireto
-        case 4:{
+        //Fecho Transitivo Indireto
+        case 2:{
             int idRotulo;
             cout << "Insira o ID do Noh: ";
             cin >> idRotulo;
             output_file << graph->fechoTransitivoIndireto(idRotulo);
             break;
+
         }
 
-            //Algoritmo Guloso Randomizado Reativo
-        case 5:{
+        //Dijkstra
+        case 3:{
             int idRotuloInicial, idRotuloFinal;
             cout << "Insira o ID do Noh Inicial: ";
             cin >> idRotuloInicial;
@@ -173,7 +141,8 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
             break;
         }
 
-        case 6:{
+        //Floyd
+        case 4:{
             int idRotuloInicial, idRotuloFinal;
             cout << "Insira o ID do Noh Inicial: ";
             cin >> idRotuloInicial;
@@ -183,8 +152,8 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
             break;
         }
 
-        case 7:{
-
+        //Kruskal
+        case 5:{
             int subconjuntoVertices[graph->getOrder()];
             int qntdVertices;
             int vertice;
@@ -203,8 +172,21 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
             } else {
                 cout << "Quantidade de vértices inválida! Insira 2 ou mais vértices." << endl;
             }
+            break;
+        }
 
-//            string teste = graph->kruskal();
+        //Busca em Largura
+        case 6:{
+            int idRotulo;
+            cout << "Insira o ID do Noh: ";
+            cin >> idRotulo;
+            output_file << graph->buscaEmLargura(idRotulo);
+            break;
+        }
+
+        //Ordenação Topológica
+        case 7:{
+            cout << graph->ordenacaoTopologica();
             break;
         }
 

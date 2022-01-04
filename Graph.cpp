@@ -1000,6 +1000,50 @@ bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){
     return false;
 }
 
+string Graph::ordenacaoTopologica()
+{
+    if(!this->directed)
+    {
+        return "ERRO: Grafo não direcionado";
+    }
+    stack<int> Stack;
+    //setando todos os vértices para não visitados
+    bool* visited = new bool[this->order];
+    for (int i = 0; i < this->order; i++)
+        visited[i] = false;
+
+    //recursivamente classifica os vértices um por um
+    for (int i = 0; i < this->order; i++)
+    if (visited[i] == false)
+        ordenacaoTopologicaAux(i, visited, Stack);
+
+    while (Stack.empty() == false) {
+        cout << Stack.top() << " ";
+        Stack.pop();
+    }
+    return "xiao te amo";
+}
+
+void Graph::ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack)
+{
+    //variável com total de vértices e seus adjacentes listados
+    int V = this->number_edges;
+    list<int> adj;
+    // marcando o nó atual como visitado
+    visited[v] = true;
+
+
+    // percorre os vértices adjacentes
+    list<int>::iterator i;
+    for (i = adj[v].begin(); i != adj[v].end(); ++i)
+        if (!visited[*i])
+            ordenacaoTopologicaAux(*i, visited, Stack);
+
+
+    // empilha o vertice atual
+    Stack.push(v);
+}
+
 
 
 
