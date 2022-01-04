@@ -48,7 +48,7 @@ public:
     string fechoTransitivoDireto(int id);
     void fechoTransitivoDiretoAux(int id, bool *verticesVisitados);
     string fechoTransitivoIndireto(int idRotulo);
-    void fechoTransitivoIndiretoAux(int idNoOrigem, int idNoAlvo, bool *visitados, list<int> *fechoTransitivoIndireto, list<int> *caminho);
+    void fechoTransitivoIndiretoAux(int idNoOrigem, int idNoAlvo, bool *verticesVisitados, bool *fechoTransitivoIndireto, bool *alcanca);
     void gerarSubgrafoVerticeInduzido(string *grafo, string *arestaDOT, int idRotulo, bool *verticesVisitados);
     bool visitou(int id, bool *verticesVisitados);
     string dijkstra(int idRotuloInicial, int idRotuloFinal);

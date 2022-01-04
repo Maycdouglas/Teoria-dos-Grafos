@@ -449,13 +449,19 @@ string Graph::fechoTransitivoIndireto(int idRotulo) {
 
 //Clausula de segurança, para caso o grafo nao seja direcionado
     if(!this->directed){
-        cout << "Este grafo nao eh direcionado!" << endl;
+        cout << "\nEste grafo nao eh direcionado!\n" << endl;
         return "";
     }
 
     //Clausula de segurança, para caso insira um ID inválido
     if(getNodeByRotulo(idRotulo) == nullptr){
-        cout << "Este ID nao existe no grafo!" << endl;
+        cout << "\nEste ID nao existe no grafo!\n" << endl;
+        return "";
+    }
+
+    //Clausula de segurança, para caso insira um ID inválido
+    if(getNodeByRotulo(idRotulo)->getInDegree() < 1){
+        cout << "\nO no escolhido possui grau de entrada igual a zero!\n" << endl;
         return "";
     }
 
@@ -463,65 +469,72 @@ string Graph::fechoTransitivoIndireto(int idRotulo) {
     montarCabecalhoGrafoDOT(&grafo,&arestaDOT);
 
     bool verticesVisitados[this->order];
-    list<int> fechoTransitivoIndireto;
+    bool fechoTransitivoIndireto[this->order];
     list<int> caminho;
 
     for(int i = 0; i < this->order; i++){ //seta todos os elementos do array com 0
         verticesVisitados[i] = false;
+        fechoTransitivoIndireto[i] = false;
     }
+
+    bool alcanca;
+    Node *noAlvo = getNodeByRotulo(idRotulo);
 
     for(int i = 0; i < this->order; i++){
-        fechoTransitivoIndiretoAux(i + 1, getNodeByRotulo(idRotulo)->getId(), verticesVisitados, &fechoTransitivoIndireto, &caminho); //inicia busca em profundidade
+        alcanca = false;
+        fechoTransitivoIndiretoAux((i + 1), noAlvo->getId(), verticesVisitados, fechoTransitivoIndireto, &alcanca); //inicia busca em profundidade
+        cout << "AQUI" << endl;
     }
+    cout << endl;
 
-    cout << "Tamanho da lista fecho: " << fechoTransitivoIndireto.size() << endl;
-
-    cout << "Tamanho da lista caminho: " << caminho.size() << endl;
-
-    for(list<int>::iterator it = fechoTransitivoIndireto.begin(); it!=fechoTransitivoIndireto.end();it++){
+    for(auto it = caminho.begin(); it!=caminho.end();it++){
         cout << *it << " ";
     }
 
     cout << endl;
+    gerarSubgrafoVerticeInduzido(&grafo,&arestaDOT,idRotulo,fechoTransitivoIndireto);
 
-    for(list<int>::iterator it = caminho.begin(); it!=caminho.end();it++){
-        cout << *it << " ";
+    cout << "\n" <<  "O fecho transitivo indireto do vertice eh: " << endl;
+
+    Node *noAtual;
+
+    //loop responsavel pela impressao do fecho transitivo direto do vertice
+    for(int i = 0; i < this->order; i++){
+        noAtual = getNode(i + 1);
+        if(fechoTransitivoIndireto[i] && idRotulo != noAtual->getIdRotulo()){
+            cout << noAtual->getIdRotulo() << " ";
+        }
     }
 
-    cout << endl;
-    //gerarSubgrafoVerticeInduzido(&grafo,&arestaDOT,idRotulo,verticesVisitados);
-
-    cout << grafo << endl;
+    cout << endl << endl;
 
     return grafo;
 
 }
 
-void Graph::fechoTransitivoIndiretoAux(int idNoOrigem, int idNoAlvo, bool *verticesVisitados, list<int> *fechoTransitivoIndireto, list<int> *caminho) {
+void Graph::fechoTransitivoIndiretoAux(int idNoOrigem, int idNoAlvo, bool *verticesVisitados, bool *fechoTransitivoIndireto, bool *alcanca) {
 
-    Node *noAtual = getNode(idNoOrigem);
-    Edge *arestaAtual = noAtual->getFirstEdge();
+    if(idNoOrigem != idNoAlvo){
+        Node *noAtual = getNode(idNoOrigem);
+        Edge *arestaAtual = noAtual->getFirstEdge();
 
-    verticesVisitados[idNoOrigem - 1] = true;
+        verticesVisitados[idNoOrigem - 1] = true;
 
-    caminho->push_back(idNoOrigem);
+        while(arestaAtual != nullptr) {
 
-    while(arestaAtual != nullptr) {
+            if(arestaAtual->getTargetId() == idNoAlvo || *alcanca ||fechoTransitivoIndireto[arestaAtual->getTargetId() - 1]){
+                fechoTransitivoIndireto[idNoOrigem - 1 ] = true;
+                *alcanca = true;
+                break;
+            }
 
-        if(arestaAtual->getTargetId() == idNoAlvo){
-            fechoTransitivoIndireto->splice(fechoTransitivoIndireto->end(),*caminho);
-            break;
+            if(!verticesVisitados[arestaAtual->getTargetId() - 1]){
+                fechoTransitivoIndiretoAux(arestaAtual->getTargetId(),idNoAlvo, verticesVisitados,fechoTransitivoIndireto, alcanca);
+            }
+
+            arestaAtual = arestaAtual->getNextEdge();
         }
-
-        if(!verticesVisitados[arestaAtual->getTargetId() - 1]){
-            fechoTransitivoDiretoAux(arestaAtual->getTargetId(), verticesVisitados);
-        }
-
-        arestaAtual = arestaAtual->getNextEdge();
     }
-
-    caminho->clear();
-
 }
 
 string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {

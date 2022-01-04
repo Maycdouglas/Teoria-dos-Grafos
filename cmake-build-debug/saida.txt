@@ -1,4 +1,2 @@
-strict digraph G {
-	20 -> 80 [weight = 10.000000, label = 10.000000]
-}
+
 
