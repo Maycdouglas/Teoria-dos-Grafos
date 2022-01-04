@@ -367,7 +367,19 @@ string Graph::fechoTransitivoDireto(int idRotulo) {
 
     gerarSubgrafoVerticeInduzido(&grafo,&arestaDOT,idRotulo,verticesVisitados); //Gera o subgrafo vertice induzido com o fecho transitivo direto
 
-    cout << grafo << endl;
+    cout << "\n" <<  "O fecho transitivo direto do vertice eh: " << endl;
+
+    Node *noAtual;
+
+    //loop responsavel pela impressao do fecho transitivo direto do vertice
+    for(int i = 0; i < this->order; i++){
+        noAtual = getNode(i + 1);
+        if(verticesVisitados[i] && idRotulo != noAtual->getIdRotulo()){
+            cout << noAtual->getIdRotulo() << " ";
+        }
+    }
+
+    cout << endl << endl;
 
     return grafo;
 
@@ -542,7 +554,7 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
             listaVerticesDisponiveis.push_back(noAtual->getId());
         }
         arestaAtual = noInicial->hasEdgeBetween(noAtual->getId());
-        //Clausula de segurança para o caso da aresta ter peso negativo
+        //Clausula de segurança para caso exista aresta com peso negativo
         if(arestaAtual != nullptr && arestaAtual->getWeight() < 0){
             cout << "\nAlgoritmo interrompido por ter aresta com peso negativo!\n" << endl;
             return "";
@@ -586,7 +598,7 @@ string Graph::dijkstra(int idRotuloInicial, int idRotuloFinal) {
             arestaAtual = noAtual->getFirstEdge();
             //percorre as arestas do nó
             while(arestaAtual != nullptr){
-                //Clausula de segurança para o caso da aresta ter peso negativo
+                //Clausula de segurança para caso exista aresta com peso negativo
                 if(arestaAtual->getWeight() < 0){
                     cout << "\nAlgoritmo interrompido por ter aresta com peso negativo!\n" << endl;
                     return "";
@@ -679,6 +691,7 @@ int Graph::extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVer
 
 bool Graph::estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis){
 
+    //percorre a lista de vertices disponiveis
     for(auto it = listaVerticesDisponiveis->begin(); it!=listaVerticesDisponiveis->end();it++){
         if(*it == idTarget){
             return true;
@@ -688,6 +701,7 @@ bool Graph::estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis){
 }
 
 void Graph::retirarElementoLista(list<int> *listaVerticesDisponiveis, int verticeMenorCaminhoAtual){
+    //percorre a lista de vertices disponiveis
     for(auto it = listaVerticesDisponiveis->begin(); it!=listaVerticesDisponiveis->end();it++){
         if(*it == verticeMenorCaminhoAtual)
         {
@@ -733,7 +747,7 @@ string Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
                 matrizVertices[linha][coluna] = 0;
             } else if(noAtual->searchEdge(noAlvo->getId())){ //verifica se existe uma aresta entre os dois vertices
                 arestaAtual = noAtual->hasEdgeBetween(noAlvo->getId());
-                //Clausula de segurança para caso exista arestas com peso negativo
+                //Clausula de segurança para caso exista aresta com peso negativo
                 if(arestaAtual->getWeight() < 0){
                     cout << "Algoritmo interrompido por ter aresta com peso negativo!" << endl;
                     return "";
@@ -845,61 +859,51 @@ Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
         }
     }
 
-    for(int i = 0; i < qntdVertices; i++) {
-        cout << arvore->getNode(i+1)->getIdRotulo() << " ";
-    }
-
-    cout << endl;
-
     queue<Edge*> filaArestas, filaArestasAux;
 
+    //ordena as arestas em ordem crescente
     ordenarArestasOrdemCrescente(arvore,&filaArestas,&filaArestasAux);
 
-    cout << "Tamanho da fila principal: " << filaArestas.size() << endl;
-    cout << "Tamanho da fila auxiliar: " << filaArestasAux.size() << endl;
-
+    //verifica se a fila principal está vazia
     if(filaArestas.empty() && !filaArestasAux.empty()) {
         filaArestas.swap(filaArestasAux);
     }
 
-    cout << endl;
-
     int vertices[arvore->getOrder()];
+
+    //popula o vetor com o id dos vertices isolados
     for(int i = 0; i < arvore->getOrder(); i++){
         vertices[i] = i + 1;
     }
 
-    for(int i = 0; i < arvore->getOrder(); i++){
-        cout << vertices[i] << " ";
-    }
-    cout << endl;
-
     int idOrigem, idAlvo, idOrigemRotulo, idAlvoRotulo;
 
+    //percorre a fila de arestas
     while(!filaArestas.empty()) {
         idOrigemRotulo = filaArestas.front()->getOriginIdRotulo();
         idOrigem = arvore->getNodeByRotulo(idOrigemRotulo)->getId();
         idAlvoRotulo = filaArestas.front()->getTargetIdRotulo();
         idAlvo = arvore->getNodeByRotulo(idAlvoRotulo)->getId();
-        cout << "idOrigem = " << idOrigem << " idAlvo = " << idAlvo << endl;
+        //verifica se os vertices estão na mesma subarvore
         if(!estaNaMesmaSubarvore(vertices, idOrigem, idAlvo)){
-            cout << "HERE 1" << endl;
             idOrigemRotulo = arvore->getNode(idOrigem)->getIdRotulo();
-            cout << "HERE 1.1" << endl;
             idAlvoRotulo = arvore->getNode(idAlvo)->getIdRotulo();
-            cout << "HERE 1.2" << endl;
+
+            //Clausula de segurança para caso exista aresta com peso negativo
+            if(filaArestas.front()->getWeight() < 0){
+                cout << "\nAlgoritmo interrompido por ter aresta com peso negativo!\n" << endl;
+            }
 
             arvore->insertEdge(idOrigemRotulo,idAlvoRotulo,filaArestas.front()->getWeight());
-            cout << "HERE 2" << endl;
+
+            //atualiza o vetor de vertices com o menor id do vertice presente no subgrafo
             if(vertices[idOrigem - 1] <= vertices[idAlvo - 1]){
-                cout << "HERE 3" << endl;
                 for(int i = 0; i < arvore->getOrder(); i++){
                     if(vertices[i] == vertices[idAlvo - 1]){
                         vertices[i] = vertices[idOrigem - 1];
                     }
                 }
             } else {
-                cout << "HERE 4" << endl;
                 for(int i = 0; i < arvore->getOrder(); i++){
                     if(vertices[i] == vertices[idOrigem - 1]){
                         vertices[i] = vertices[idAlvo - 1];
@@ -907,18 +911,8 @@ Graph* Graph::kruskal(int *subconjuntoVertices, int qntdVertices){
                 }
             }
         }
-        cout << "HERE 5" << endl;
-        cout << "======" << endl;
-        cout << "IMPRIMINDO VETOR: " << endl;
-        for(int i = 0; i < arvore->getOrder(); i++){
-            cout << vertices[i] << " ";
-        }
-        cout << endl;
         filaArestas.pop();
     }
-
-    cout << "ORDEM DA ARVORE: " << arvore->getOrder() << endl;
-    cout << "NUMERO DE ARESTAS DA ARVORE: " << arvore->getNumberEdges() << endl;
 
     return arvore;
 }
@@ -929,45 +923,47 @@ void Graph::ordenarArestasOrdemCrescente(Graph *arvore, queue<Edge*> *filaAresta
     bool encontrouPosicao;
     //loop responsavel por percorrer cada no do grafo e ordenar a lista de arestas
     while(noAtual != nullptr){
-        cout << "=======" << endl;
-        cout << "Estou no Noh " << noAtual->getIdRotulo() << endl;
-        cout << "-------" << endl;
+        //verifica se o nó não é nulo
         if (arvore->getNodeByRotulo(noAtual->getIdRotulo()) != nullptr){
             arestaAtual = noAtual->getFirstEdge();
+            //percorre as arestas do nó
             while(arestaAtual != nullptr){
-                cout << "Estou na Aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
+                //verifica se o nó alvo não é nulo
                 if(arvore->getNodeByRotulo(getNode(arestaAtual->getTargetId())->getIdRotulo()) != nullptr){
                     encontrouPosicao = false;
+                    //verifica se a aresta não é de retorno
                     if(!arestaAtual->getRetorno()){
                         if (filaArestas->empty() && filaArestasAux->empty()){ //verifica se as duas filas estao vazias
                             filaArestas->push(arestaAtual);
                         } else if(filaArestasAux->empty()) { //verifica se a fila auxiliar esta vazia
+                            //verifica se o peso da aresta atual é maior ou igual ao ultimo elemento da fila para nao precisar percorrer ela inteira
                             if(filaArestas->back()->getWeight() <= arestaAtual->getWeight()){
                                 filaArestas->push(arestaAtual);
                             } else{
+                                //percorre a fila de arestas
                                 while(!filaArestas->empty()){
+                                    //verifica se encontrou a posição da aresta na fila ou se o peso da aresta atual é maior ou igual ao peso do primeiro elemento da fila
                                     if(encontrouPosicao || filaArestas->front()->getWeight() <= arestaAtual->getWeight()){
-                                        cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestas->front()->getTargetId())->getIdRotulo() << endl;
                                         filaArestasAux->push(filaArestas->front());
                                         filaArestas->pop();
                                     } else{
-                                        cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
                                         filaArestasAux->push(arestaAtual);
                                         encontrouPosicao = true;
                                     }
                                 }
                             }
                         } else if(filaArestas->empty()){ //verifica se a fila principal esta vazia
+                            //verifica se o peso da aresta atual é maior ou igual ao ultimo elemento da fila para nao precisar percorrer ela inteira
                             if(filaArestasAux->back()->getWeight() <= arestaAtual->getWeight()) {
                                 filaArestasAux->push(arestaAtual);
                             } else {
+                                //percorre a fila de arestas
                                 while(!filaArestasAux->empty()){
+                                    //verifica se encontrou a posição da aresta na fila ou se o peso da aresta atual é maior ou igual ao peso do primeiro elemento da fila
                                     if(encontrouPosicao || filaArestasAux->front()->getWeight() <= arestaAtual->getWeight()){
-                                        cout << "IF Deve ter adicionado aresta com alvo " << getNode(filaArestasAux->front()->getTargetId())->getIdRotulo() << endl;
                                         filaArestas->push(filaArestasAux->front());
                                         filaArestasAux->pop();
                                     } else{
-                                        cout << "ELSE Deve ter adicionado aresta com alvo " << getNode(arestaAtual->getTargetId())->getIdRotulo() << endl;
                                         filaArestas->push(arestaAtual);
                                         encontrouPosicao = true;
                                     }
@@ -984,8 +980,8 @@ void Graph::ordenarArestasOrdemCrescente(Graph *arvore, queue<Edge*> *filaAresta
 }
 
 bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){
+    //verifica se os vertices estao na mesma arvore
     if(vertices[idOrigem - 1] == vertices[idAlvo - 1]){
-        cout << vertices[idOrigem - 1] << " = " << vertices[idAlvo - 1] << endl;
         return true;
     }
     return false;
