@@ -778,59 +778,40 @@ bool Graph::estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo){
 
 string Graph::ordenacaoTopologica()
 {   
-    if(!this->directed)
+    //verifica se o grafo é direcionado
+    if(!graph->directed)
     {
         return "ERRO: Grafo não direcionado";
     }
-     stack<int> Stack;
-    //setando todos os vértices para não visitados
-    bool* visited = new bool[this->order];
-    for (int i = 0; i < this->order; i++)
-        visited[i] = false;
+     vector<No*> ordemTopologica;
+     vector<No*> filaDeVerticesComGrauDeEntradaZero;
+     No* conexao = this->getNode(0)
 
-    //recursivamente classifica os vértices um por um
-    for (int i = 0; i < this->order; i++){
-        cout << "to aqui" << endl;
-        if (!visited[i])
-            ordenacaoTopologicaAux(i, visited, Stack);
+  for (int i = 0; i < this->getNumberEdges(); i++)
+  {
+    No* verticeAtual = this->getNode(i);
+    if (verticeAtual->getInDegree() == 0)
+    {
+      filaDeVerticesComGrauDeEntradaZero.push_back(verticeAtual);
     }
+  }
 
-    while (!Stack.empty()) {
-        cout << getNode(Stack.top() + 1)->getIdRotulo() << " ";
-        Stack.pop();
-    }
-    return "xiao te amo";
+    while (!filaDeVerticesComGrauDeEntradaZero.empty())
+    {
+        No *vertice_n = filaDeVerticesComGrauDeEntradaZero.front();
+        filaDeVerticesComGrauDeEntradaZero.erase(filaDeVerticesComGrauDeEntradaZero.begin());
+        ordemTopologica.push_back(vertice_n);
+        
+        for (No *conexao : vertice_n->getFirstEdge())
+        {
+            conexao->incrementInDegree(-1);
+
+            if (conexao->getInDegree() == 0)
+            {
+                filaDeVerticesComGrauDeEntradaZero.push_back(conexao);
+            }
+        }
+  }
+
+  return ordemTopologica;
 }
-
-void Graph::ordenacaoTopologicaAux(int v, bool visited[],stack<int>& Stack)
-{
-    //variável com total de vértices e seus adjacentes listados
-    int V = this->number_edges;
-    list<int> adj;
-    // marcando o nó atual como visitado
-     visited[v] = true;
-
-    
-    // percorre os vértices adjacentes
-    list<int>::iterator i;
-    for (i = adj.begin(); i != adj.end(); ++i)
-        if (!visited[*i])
-            ordenacaoTopologicaAux(*i, visited, Stack);
-
-    
-    // empilha o vertice atual
-    Stack.push(v);
-}
-
-//Graph* graph::prim()
-//{
-//     if (graph->getDirected()) {
-//        cout << "Graph is directed" << endl;
-//    } else {
-//        if (!graph->getWeightedEdge()) {
-//            cout << "Graph is not weighted" << endl;
-//        } else {
-//            graph->agmPrim(output_file);
-//        }
-//    }
-//}
